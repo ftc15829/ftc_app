@@ -47,7 +47,7 @@ public class Main_Gamepad extends LinearOpMode {
         switch (motorID) {
             case 0: // leftDrive
                 // Simply forward the raw y value
-                powerLvl = (this.gamepad1.left_stick_y * mod) * CORRECTION;
+                powerLvl = (this.gamepad1.right_stick_y * mod) * CORRECTION;
                 break;
             case 1: // rightDrive
                 powerLvl = (this.gamepad1.right_stick_y * mod);
@@ -80,7 +80,7 @@ public class Main_Gamepad extends LinearOpMode {
                 if (this.gamepad2.x == true) {
                     position_markerServo = 1;
                     sleep(5);}
-                else if (this.gamepad2.y==true){
+                else if (this.gamepad2.y == true){
                     position_markerServo=0;
                     sleep(5);
                 }
