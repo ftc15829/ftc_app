@@ -9,34 +9,74 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 // Autonomous means that the robot may recieve no gamepad input and complete tasks using this program only
 @Autonomous
 
-public class MarkerAuto extends LinearOpMode {
+public class PitToMarkerToPit extends LinearOpMode {
     DcMotor leftDrive;
     DcMotor rightDrive;
     DcMotor linearSlide;
     Servo mainServo;
     Servo markerServo;
     
-    double position_mainServo = 0.3; // Starts servo at position
+    double position_mainServo = 0.5; // Starts servo at position
     double position_markerServo = 0.0;
 
     void run(){
         linearSlide.setPower(1);
-        sleep(2800);
+        sleep(3000);
+        
         linearSlide.setPower(0);
+        mainServo.setPosition(1);
+        sleep(300);
+        
         leftDrive.setPower(-0.7);
         rightDrive.setPower(-0.7);
-        mainServo.setPosition(1);
-        sleep(3500);
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
-        markerServo.setPosition(1.0);
-        linearSlide.setPower(-1);
         sleep(1000);
+        
+        leftDrive.setPower(0.0);
+        rightDrive.setPower(0.0);
+        linearSlide.setPower(-1);
+        sleep(3000);
+        
+        linearSlide.setPower(0);
+        leftDrive.setPower(0.7);
+        rightDrive.setPower(-0.7);
+        sleep(1700);
+        
+        leftDrive.setPower(-0.7);
+        rightDrive.setPower(-0.7);
+        sleep(3200);
+        
+        leftDrive.setPower(0.7);
+        rightDrive.setPower(-0.7);
+        sleep(1450);
+        
+        leftDrive.setPower(-0.7);
+        rightDrive.setPower(-0.7);
+        sleep(4600);
+        
+        leftDrive.setPower(0.0);
+        rightDrive.setPower(0.0);
+        markerServo.setPosition(1.0);
+        sleep(500);
+        
+        leftDrive.setPower(0.7);
+        rightDrive.setPower(0.7);
+        sleep(4600);
+        
+        leftDrive.setPower(-0.7);
+        rightDrive.setPower(0.7);
+        sleep(1200);
+        
+        leftDrive.setPower(0.7);
+        rightDrive.setPower(0.7);
+        sleep(750);
+        
+        leftDrive.setPower(0.7);
+        rightDrive.setPower(-0.7);
+        sleep(1000);
+        
         leftDrive.setPower(0.7);
         rightDrive.setPower(0.7);
         sleep(1000);
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
         stop();
         }
     // Main function

@@ -10,21 +10,21 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 // import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 @Autonomous
-public class SensorTesting extends LinearOpMode {
-
-    // public ColorSensor colorSensor;
-
-
+public class SensorTesting extends LinearOpMode { 
+    
+    // public ColorSensor colorSensor; 
+    
+    
     public void initSensors() {
-        // colorSensor = hardwareMap.get(ColorSensor.class, "color");
-    }
-
+        // colorSensor = hardwareMap.get(ColorSensor.class, "color"); 
+        }
+    
     public void runOpMode() {
         // sensors();
-
+        
         // float[] hsvValues = new float[3];
         // final float values[] = hsvValues;
-
+        
         while(opModeIsActive()) {
             // telemetry.addData("Alpha", colorSensor.alpha());
             // telemetry.addData("Red  ", colorSensor.red());
@@ -32,7 +32,7 @@ public class SensorTesting extends LinearOpMode {
             // telemetry.addData("Blue ", colorSensor.blue());
             // telemetry.addData("Hue", hsvValues[0]);
         }
-
-
+        
+        
     }
 }
