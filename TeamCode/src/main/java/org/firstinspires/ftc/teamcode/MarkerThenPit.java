@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode;
-import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,16 +9,16 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 @Autonomous
 
 public class MarkerThenPit extends LinearOpMode {
-    DcMotor leftDrive;
-    DcMotor rightDrive;
-    DcMotor linearSlide;
-    Servo mainServo;
-    Servo markerServo;
+    private DcMotor leftDrive;
+    private DcMotor rightDrive;
+    private DcMotor linearSlide;
+    private Servo mainServo;
+    private Servo markerServo;
     
-    double position_mainServo = 0.7; // Starts servo at position
-    double position_markerServo = 0.0;
+    private double position_mainServo = 0.7; // Starts servo at position
+    private double position_markerServo = 0.0;
 
-    void run(){
+    private void run(){
         linearSlide.setPower(1);
         sleep(3000);
         

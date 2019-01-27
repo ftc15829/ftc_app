@@ -17,14 +17,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Main_Gamepad extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
-    public DcMotor leftDrive;
-    public DcMotor rightDrive;
-    public DcMotor linearSlide;
-    public DcMotor mainShoulder;
-    public Servo mainServo;
-    public Servo markerServo;
-    public Servo hand;
-    public CRServo armExtend;
+    private DcMotor leftDrive;
+    private DcMotor rightDrive;
+    private DcMotor linearSlide;
+    private DcMotor mainShoulder;
+    private Servo mainServo;
+    private Servo markerServo;
+    private Servo hand;
+    private CRServo armExtend;
     // Configures the main servo
     static final double INCREMENT = 0.01; // Amount to move servo each cycle (CYCLE_MS)
     static final int CYCLE_MS =  50; // Time to complete one cycle
@@ -40,9 +40,9 @@ public class Main_Gamepad extends LinearOpMode {
         double powerLvl = 0.0; // Initializes power level with a default value of 0
         double mod = 1;
         double CORRECTION = 1.0;
-        if (this.gamepad1.left_bumper == true)
+        if (this.gamepad1.left_bumper)
             mod = 0.5;
-        if (this.gamepad1.right_bumper == true)
+        if (this.gamepad1.right_bumper)
             mod = 0.75;
 
         // Takes the motor ID and sets the power
@@ -65,24 +65,24 @@ public class Main_Gamepad extends LinearOpMode {
     }
 
     // Controls servos
-    public void servoControl(int servoID) {
+    private void servoControl(int servoID) {
         switch (servoID) {
             case 0: // mainServo
-                if (mainServo.getPosition() >= 0.0 && this.gamepad2.a == true) {
+                if (mainServo.getPosition() >= 0.0 && this.gamepad2.a) {
                     position_mainServo -= INCREMENT;
                     sleep(3);
                 }
-                else if (mainServo.getPosition() <= 1.0 && this.gamepad2.b == true) {
+                else if (mainServo.getPosition() <= 1.0 && this.gamepad2.b) {
                     position_mainServo += INCREMENT;
                     sleep(3);
                 }
                 mainServo.setPosition(position_mainServo);
             break;
             case 1: // markerServo
-                if (this.gamepad2.x == true) {
+                if (this.gamepad2.x) {
                     position_markerServo = 1;
                     sleep(5);}
-                else if (this.gamepad2.y==true){
+                else if (this.gamepad2.y){
                 position_markerServo=0;
                 sleep(5);
                 }
@@ -107,15 +107,15 @@ public class Main_Gamepad extends LinearOpMode {
             }
         }
     }
-    public double conServo(int id){
+    private double conServo(int id){
         double power=0;
         switch (id)
         {
             case 0: // arm extend
             {
-                if (this.gamepad2.right_bumper==true)
+                if (this.gamepad2.right_bumper)
                     power=1.0;
-                else if (this.gamepad2.left_bumper==true)
+                else if (this.gamepad2.left_bumper)
                     power=-1.0;
                 else 
                     power=0.0;
@@ -127,7 +127,7 @@ public class Main_Gamepad extends LinearOpMode {
     // Automatically runs
     @Override
     public void runOpMode() {
-        
+
         // Updates telemetry (log) to show it is running
         telemetry.addData("Status", "Initialized");
         telemetry.update();

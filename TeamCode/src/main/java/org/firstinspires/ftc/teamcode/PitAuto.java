@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -9,16 +8,16 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 @Autonomous
 
 public class PitAuto extends LinearOpMode {
-    DcMotor leftDrive;
-    DcMotor rightDrive;
-    DcMotor linearSlide;
-    Servo mainServo;
-    Servo markerServo;
+    private DcMotor leftDrive;
+    private DcMotor rightDrive;
+    private DcMotor linearSlide;
+    private Servo mainServo;
+    private Servo markerServo;
     
-    double position_mainServo = 0.7; // Starts servo at position
-    double position_markerServo = 1.0;
+    private double position_mainServo = 0.7; // Starts servo at position
+    private double position_markerServo = 1.0;
 
-    void run(){
+    private void run(){
     linearSlide.setPower(1);
     sleep(2800);
     linearSlide.setPower(0);
@@ -35,7 +34,6 @@ public class PitAuto extends LinearOpMode {
     
         
     // Main function
-    @Override
     public void runOpMode(){
     leftDrive=hardwareMap.dcMotor.get("leftDrive");
     rightDrive=hardwareMap.dcMotor.get("rightDrive");

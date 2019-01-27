@@ -19,7 +19,7 @@ public class MarkerAuto extends LinearOpMode {
     double position_mainServo = 0.7; // Starts servo at position
     double position_markerServo = 0.0;
 
-    void run(){
+    private void run(){
         linearSlide.setPower(1);
         sleep(2800);
         linearSlide.setPower(0);

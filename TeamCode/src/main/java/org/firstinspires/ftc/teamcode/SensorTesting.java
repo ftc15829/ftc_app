@@ -25,13 +25,13 @@ public class SensorTesting extends LinearOpMode {
         // float[] hsvValues = new float[3];
         // final float values[] = hsvValues;
         
-        while(opModeIsActive()) {
-            // telemetry.addData("Alpha", colorSensor.alpha());
-            // telemetry.addData("Red  ", colorSensor.red());
-            // telemetry.addData("Green", colorSensor.green());
-            // telemetry.addData("Blue ", colorSensor.blue());
-            // telemetry.addData("Hue", hsvValues[0]);
-        }
+//        while(opModeIsActive()) {
+//             telemetry.addData("Alpha", colorSensor.alpha());
+//             telemetry.addData("Red  ", colorSensor.red());
+//             telemetry.addData("Green", colorSensor.green());
+//             telemetry.addData("Blue ", colorSensor.blue());
+//             telemetry.addData("Hue", hsvValues[0]);
+//        }
         
         
     }
