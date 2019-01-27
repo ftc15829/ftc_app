@@ -33,7 +33,7 @@ public class Main_Gamepad extends LinearOpMode {
     private double drivePower(int motorID) {
         double powerLvl = 0.0; // Initializes power level with a default value of 0
         double driveMod = 1; // Modifier for left and right drive's speed control
-        final double CORRECTION = 1.0; // Corrects for unwanted steering
+        final double CORRECTION = 1.0; // Adjusts leftDrives power to account for unwanted steering
 
         // Adjusts drive modifier
         if (this.gamepad1.left_bumper)
@@ -45,15 +45,17 @@ public class Main_Gamepad extends LinearOpMode {
         switch (motorID) {
 
             case 0: // leftDrive
-                // Simply forward the raw y value
                 powerLvl = (this.gamepad1.left_stick_y * driveMod) * CORRECTION;
                 break;
+
             case 1: // rightDrive
                 powerLvl = (this.gamepad1.right_stick_y * driveMod);
                 break;
+
             case 2: // linearSlide
                 powerLvl = this.gamepad2.left_stick_y * -0.5;
                 break;
+
             case 3: // Arm
                 powerLvl = this.gamepad2.right_stick_y * 0.5;
                 break;
@@ -135,12 +137,11 @@ public class Main_Gamepad extends LinearOpMode {
         mainServo.setPosition(position_mainServo);
         markerServo.setPosition(position_markerServo);
 
-        // Waits for the user to press "Start"
         waitForStart();
 
         // Game loop
         while (opModeIsActive()) {
-            
+
             // Obtains value from power() function and sets the motors power to that
             leftDrive.setPower(drivePower(0));
             rightDrive.setPower(drivePower(1));
