@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 @Autonomous(name = "Marker to Pit")
 
-public class MarkerThenPit extends LinearOpMode {
+public class MarkerToPit extends LinearOpMode {
     private DcMotor leftDrive;
     private DcMotor rightDrive;
     private DcMotor linearSlide;

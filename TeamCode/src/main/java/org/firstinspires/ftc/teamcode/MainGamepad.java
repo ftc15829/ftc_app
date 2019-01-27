@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 @TeleOp(name = "Main Gamepad")
 
-public class Main_Gamepad extends LinearOpMode {
+public class MainGamepad extends LinearOpMode {
     private DcMotor leftDrive;
     private DcMotor rightDrive;
     private DcMotor linearSlide;
@@ -20,14 +20,14 @@ public class Main_Gamepad extends LinearOpMode {
     private CRServo armExtend;
 
     // Configures the main servo
-    static final double MAIN_ADJUST = 0.01; // Amount to move servo each cycle (CYCLE_MS)
-    static final double HAND_ADJUST = 0.005;
-    static final int CYCLE_MS = 50; // Time to complete one cycle
-    static final double MAX_POS = 1.0;    // Sets the maximum rotational position (percentage of 180 degrees)
-    static final double MIN_POS = 0.0; // Sets the minimum rotational position
-    double position_mainServo = 1.0; // Starts servo at position
-    double position_markerServo = 0.0;
-    double position_hand = 0.95;
+    private static final double MAIN_ADJUST = 0.01; // Amount to move servo each cycle (CYCLE_MS)
+    private static final double HAND_ADJUST = 0.005;
+    private static final int CYCLE_MS = 50; // Time to complete one cycle
+    private static final double MAX_POS = 1.0;    // Sets the maximum rotational position (percentage of 180 degrees)
+    private static final double MIN_POS = 0.0; // Sets the minimum rotational position
+    private double position_mainServo = 1.0; // Starts servo at position
+    private double position_markerServo = 0.0;
+    private double position_hand = 0.95;
 
     // Sets the power of the various motors
     private double drivePower(int motorID) {
