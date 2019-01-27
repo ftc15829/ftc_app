@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Test extends LinearOpMode {
     public void runOpMode() {
         ElapsedTime runtime = new ElapsedTime();
-
+        waitForStart();
         while (opModeIsActive()) {
             telemetry.addData("Time: ", "Elapsed Time: " + runtime);
             telemetry.update();
