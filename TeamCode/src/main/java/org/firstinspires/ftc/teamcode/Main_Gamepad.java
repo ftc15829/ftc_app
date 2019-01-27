@@ -30,9 +30,11 @@ public class Main_Gamepad extends LinearOpMode {
     static final int CYCLE_MS =  50; // Time to complete one cycle
     static final double MAX_POS    = 1.0;    // Sets the maximum rotational position (percentage of 180 degrees)
     static final double MIN_POS    = 0.0; // Sets the minimum rotational position 
-    double position_mainServo = 0.0; // Starts servo at position
+    double position_mainServo = 1.0; // Starts servo at position
     double position_markerServo = 0.0;
+    
     double position_hand = 0.95;
+    double hand1 = 0.005;
     // Sets the power of the various motors
     private double drivePower(int motorID) {
         double powerLvl = 0.0; // Initializes power level with a default value of 0
@@ -53,10 +55,10 @@ public class Main_Gamepad extends LinearOpMode {
                 powerLvl = (this.gamepad1.right_stick_y * mod);
             break;
             case 2: // linearSlide
-                powerLvl = this.gamepad2.left_stick_y * -0.3;
+                powerLvl = this.gamepad2.left_stick_y * -0.5;
             break;
             case 3:
-                powerLvl = this.gamepad2.right_stick_y * 0.3;
+                powerLvl = this.gamepad2.right_stick_y * 0.5;
             break;
         }
         return powerLvl;
@@ -68,11 +70,11 @@ public class Main_Gamepad extends LinearOpMode {
             case 0: // mainServo
                 if (mainServo.getPosition() >= 0.0 && this.gamepad2.a == true) {
                     position_mainServo -= INCREMENT;
-                    sleep(5);
+                    sleep(3);
                 }
                 else if (mainServo.getPosition() <= 1.0 && this.gamepad2.b == true) {
                     position_mainServo += INCREMENT;
-                    sleep(5);
+                    sleep(3);
                 }
                 mainServo.setPosition(position_mainServo);
             break;
@@ -93,12 +95,12 @@ public class Main_Gamepad extends LinearOpMode {
         
             case 2:
             {
-                    if (hand.getPosition() >= 0.6 && this.gamepad2.left_trigger !=0) {
-                    position_hand -= INCREMENT;
+                    if (hand.getPosition() > 0.6 && this.gamepad2.left_trigger >0.2) {
+                    position_hand -= hand1;
                     sleep(5);
                 }
-                else if (hand.getPosition() <= 0.95 && this.gamepad2.right_trigger !=0) {
-                    position_hand += INCREMENT;
+                else if (hand.getPosition() < 1.0 && this.gamepad2.right_trigger >0.2) {
+                    position_hand += hand1;
                     sleep(5);
                 }
                 hand.setPosition(position_hand);

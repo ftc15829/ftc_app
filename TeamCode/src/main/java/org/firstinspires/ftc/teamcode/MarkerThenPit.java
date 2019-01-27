@@ -16,7 +16,7 @@ public class MarkerThenPit extends LinearOpMode {
     Servo mainServo;
     Servo markerServo;
     
-    double position_mainServo = 0.6; // Starts servo at position
+    double position_mainServo = 0.7; // Starts servo at position
     double position_markerServo = 0.0;
 
     void run(){

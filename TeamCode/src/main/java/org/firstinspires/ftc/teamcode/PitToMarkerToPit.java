@@ -16,7 +16,7 @@ public class PitToMarkerToPit extends LinearOpMode {
     Servo mainServo;
     Servo markerServo;
     
-    double position_mainServo = 0.5; // Starts servo at position
+    double position_mainServo = 0.7; // Starts servo at position
     double position_markerServo = 0.0;
 
     void run(){
