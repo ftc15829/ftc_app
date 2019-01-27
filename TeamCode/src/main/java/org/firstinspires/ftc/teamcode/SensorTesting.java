@@ -1,23 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-// import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Hardware;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-// import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
-@Autonomous
-public class SensorTesting extends LinearOpMode { 
-    
-    // public ColorSensor colorSensor; 
-    
-    
+@Autonomous(name = "Sensor Testing")
+
+public class SensorTesting extends LinearOpMode {
+
     public void initSensors() {
-        // colorSensor = hardwareMap.get(ColorSensor.class, "color"); 
-        }
+
+    }
     
     public void runOpMode() {
         
