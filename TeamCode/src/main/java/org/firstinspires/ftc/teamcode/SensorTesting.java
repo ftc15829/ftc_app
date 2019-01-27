@@ -20,19 +20,6 @@ public class SensorTesting extends LinearOpMode {
         }
     
     public void runOpMode() {
-        // sensors();
-        
-        // float[] hsvValues = new float[3];
-        // final float values[] = hsvValues;
-        
-//        while(opModeIsActive()) {
-//             telemetry.addData("Alpha", colorSensor.alpha());
-//             telemetry.addData("Red  ", colorSensor.red());
-//             telemetry.addData("Green", colorSensor.green());
-//             telemetry.addData("Blue ", colorSensor.blue());
-//             telemetry.addData("Hue", hsvValues[0]);
-//        }
-        
         
     }
 }
