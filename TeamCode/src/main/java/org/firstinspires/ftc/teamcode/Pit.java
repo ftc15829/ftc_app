@@ -1,16 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-@Autonomous(name = "Marker")
+@Disabled
+@Autonomous(name = "Pit")
 
-public class MarkerAuto extends LinearOpMode {
+public class Pit extends LinearOpMode {
 	
-	//Defines Hardware
+	// Defines hardware
 	private DcMotor linearSlide = hardwareMap.dcMotor.get("linearSlide");
 	private DcMotor leftDrive = hardwareMap.dcMotor.get("leftDrive");
 	private DcMotor rightDrive = hardwareMap.dcMotor.get("rightDrive");
@@ -18,36 +19,28 @@ public class MarkerAuto extends LinearOpMode {
 	private Servo markerServo = hardwareMap.servo.get("markerServo");
 	
 	private double position_mainServo = 0.7; // Starts servo at position
-	private double position_markerServo = 0.0;
+	private double position_markerServo = 1.0;
 	
 	private void run() {
 		linearSlide.setPower(1);
 		sleep(2800);
 		
 		linearSlide.setPower(0);
-		leftDrive.setPower(-0.7);
-		rightDrive.setPower(-0.7);
+		leftDrive.setPower(-1);
+		rightDrive.setPower(-1);
 		mainServo.setPosition(1);
-		sleep(3500);
+		sleep(4000);
 		
 		leftDrive.setPower(0);
 		rightDrive.setPower(0);
-		markerServo.setPosition(1.0);
 		linearSlide.setPower(-1);
 		sleep(1000);
-		
-		leftDrive.setPower(0.7);
-		rightDrive.setPower(0.7);
-		sleep(1000);
-		
-		leftDrive.setPower(0);
-		rightDrive.setPower(0);
 		
 		stop();
 	}
 	
-	// Initializes hardware
-	@Override
+	
+	// Main function
 	public void runOpMode() {
 		// Initializes hardware
 		leftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -57,7 +50,9 @@ public class MarkerAuto extends LinearOpMode {
 		
 		waitForStart();
 		
-		// Runs main function
+		// Runs main Function
 		run();
 	}
 }
+
+
