@@ -45,19 +45,15 @@ public class MainGamepad extends LinearOpMode {
 		
 		// Takes the motor ID and sets the power
 		switch (motorID) {
-			
 			case 0: // leftDrive
 				powerLvl = (this.gamepad1.left_stick_y * driveMod) * CORRECTION;
 				break;
-				
 			case 1: // rightDrive
 				powerLvl = (this.gamepad1.right_stick_y * driveMod);
 				break;
-				
 			case 2: // linearSlide
 				powerLvl = this.gamepad2.left_stick_y * -0.5;
 				break;
-				
 			case 3: // Arm
 				powerLvl = this.gamepad2.right_stick_y * 0.5;
 				break;
@@ -68,7 +64,6 @@ public class MainGamepad extends LinearOpMode {
 	// Controls servos
 	private void servoControl(int servoID) {
 		switch (servoID) {
-			
 			case 0: // mainServo
 				if (mainServo.getPosition() >= 0.0 && this.gamepad2.a) {
 					position_mainServo -= MAIN_ADJUST;
@@ -79,7 +74,6 @@ public class MainGamepad extends LinearOpMode {
 				}
 				mainServo.setPosition(position_mainServo);
 				break;
-				
 			case 1: // markerServo
 				if (this.gamepad2.x) {
 					position_markerServo = 1;
@@ -90,7 +84,6 @@ public class MainGamepad extends LinearOpMode {
 				}
 				markerServo.setPosition(position_markerServo);
 				break;
-				
 			case 2: // hand
 				if (hand.getPosition() > 0.6 && this.gamepad2.left_trigger > 0.2) {
 					position_hand -= HAND_ADJUST;
@@ -107,7 +100,6 @@ public class MainGamepad extends LinearOpMode {
 	private double conServo(int id) {
 		double power = 0.0;
 		switch (id) {
-			
 			case 0: // arm extend
 				if (this.gamepad2.right_bumper)
 					power = 1.0;
