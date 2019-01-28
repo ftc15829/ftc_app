@@ -5,16 +5,16 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-@TeleOp(name="Test")
+@TeleOp(name = "Test")
 
 public class Test extends LinearOpMode {
-
-    public void runOpMode() {
-        ElapsedTime runtime = new ElapsedTime();
-        waitForStart();
-        while (opModeIsActive()) {
-            telemetry.addData("Time: ", "Elapsed Time: " + runtime);
-            telemetry.update();
-        }
-    }
+	
+	public void runOpMode() {
+		ElapsedTime runtime = new ElapsedTime();
+		waitForStart();
+		while (opModeIsActive()) {
+			telemetry.addData("Time: ", "Elapsed Time: " + runtime);
+			telemetry.update();
+		}
+	}
 }

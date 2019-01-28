@@ -7,12 +7,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 @Autonomous(name = "Sensor Testing")
 
 public class SensorTesting extends LinearOpMode {
-
-    public void initSensors() {
-
-    }
-    
-    public void runOpMode() {
-        
-    }
+	
+	public void initSensors() {
+	
+	}
+	
+	public void runOpMode() {
+	
+	}
 }
