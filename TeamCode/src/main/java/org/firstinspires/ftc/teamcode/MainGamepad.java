@@ -115,7 +115,7 @@ public class MainGamepad extends LinearOpMode {
 	@Override
 	public void runOpMode() {
 		// Updates telemetry (log) to show it is running
-		telemetry.addData("Status", "Initialized");
+		telemetry.addData("Status", "Updated!");
 		telemetry.update();
 		
 		// Initializes hardware

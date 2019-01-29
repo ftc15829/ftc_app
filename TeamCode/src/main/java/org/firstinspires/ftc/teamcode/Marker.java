@@ -50,6 +50,11 @@ public class Marker extends LinearOpMode {
 	// Initializes hardware
 	@Override
 	public void runOpMode() {
+
+		// Updates telemetry (log) to show it is running
+		telemetry.addData("Status", "Updated!");
+		telemetry.update();
+
 		// Initializes hardware
 		leftDrive.setDirection(DcMotor.Direction.REVERSE);
 		rightDrive.setDirection(DcMotor.Direction.FORWARD);
