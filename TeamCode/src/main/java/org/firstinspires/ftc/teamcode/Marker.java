@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -15,7 +16,7 @@ public class Marker extends LinearOpMode {
 	private DcMotor linearSlide;
 	private DcMotor leftDrive;
 	private DcMotor rightDrive;
-	private Servo mainServo;
+	private CRServo mainServo;
 	private Servo markerServo;
 	
 	private double position_mainServo = 0.7; // Starts servo at position
@@ -24,11 +25,15 @@ public class Marker extends LinearOpMode {
 	private void run() {
 		linearSlide.setPower(1);
 		sleep(2800);
-		
+
 		linearSlide.setPower(0);
+		mainServo.setPower(1);
+		sleep(200);
+
 		leftDrive.setPower(-0.7);
 		rightDrive.setPower(-0.7);
-		mainServo.setPosition(1);
+		sleep(500);
+		mainServo.setPower(0);
 		sleep(3500);
 		
 		leftDrive.setPower(0);
@@ -39,6 +44,7 @@ public class Marker extends LinearOpMode {
 		
 		leftDrive.setPower(0.7);
 		rightDrive.setPower(0.7);
+		linearSlide.setPower(0);
 		sleep(1000);
 		
 		leftDrive.setPower(0);
@@ -59,12 +65,12 @@ public class Marker extends LinearOpMode {
         linearSlide = hardwareMap.dcMotor.get("linearSlide");
         leftDrive = hardwareMap.dcMotor.get("leftDrive");
         rightDrive = hardwareMap.dcMotor.get("rightDrive");
-        mainServo = hardwareMap.servo.get("mainServo");
+        mainServo = hardwareMap.crservo.get("mainServo");
         markerServo = hardwareMap.servo.get("markerServo");
 
 		leftDrive.setDirection(DcMotor.Direction.REVERSE);
 		rightDrive.setDirection(DcMotor.Direction.FORWARD);
-		mainServo.setPosition(position_mainServo);
+	//	mainServo.setPower(position_mainServo);
 		markerServo.setPosition(position_markerServo);
 		
 		waitForStart();

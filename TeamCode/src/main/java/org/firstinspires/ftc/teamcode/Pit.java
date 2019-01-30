@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -15,7 +16,7 @@ public class Pit extends LinearOpMode {
 	private DcMotor linearSlide;
 	private DcMotor leftDrive;
 	private DcMotor rightDrive;
-	private Servo mainServo;
+	private CRServo mainServo;
 	private Servo markerServo;
 	
 	private double position_mainServo = 0.7; // Starts servo at position
@@ -26,9 +27,13 @@ public class Pit extends LinearOpMode {
 		sleep(2800);
 		
 		linearSlide.setPower(0);
+		mainServo.setPower(1);
+		sleep(200);
+
 		leftDrive.setPower(-1);
 		rightDrive.setPower(-1);
-		mainServo.setPosition(1);
+		sleep(500);
+		mainServo.setPower(0);
 		sleep(4000);
 		
 		leftDrive.setPower(0);
@@ -51,12 +56,12 @@ public class Pit extends LinearOpMode {
         linearSlide = hardwareMap.dcMotor.get("linearSlide");
         leftDrive = hardwareMap.dcMotor.get("leftDrive");
         rightDrive = hardwareMap.dcMotor.get("rightDrive");
-        mainServo = hardwareMap.servo.get("mainServo");
+        mainServo = hardwareMap.crservo.get("mainServo");
         markerServo = hardwareMap.servo.get("markerServo");
 
 		leftDrive.setDirection(DcMotor.Direction.REVERSE);
 		rightDrive.setDirection(DcMotor.Direction.FORWARD);
-		mainServo.setPosition(position_mainServo);
+//		mainServo.setPosition(position_mainServo);
 		markerServo.setPosition(position_markerServo);
 		
 		waitForStart();

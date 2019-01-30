@@ -108,6 +108,14 @@ public class MainGamepad extends LinearOpMode {
 				else if (this.gamepad2.left_bumper)
 					power = -1.0;
 				break;
+            case 1:
+                if(this.gamepad2.a)
+                    power=1.0;
+                else if (this.gamepad2.b)
+                    power=-1.0;
+                else
+                    power=0.0;
+                break;
 		}
 		return power;
 	}
@@ -124,12 +132,12 @@ public class MainGamepad extends LinearOpMode {
         mainShoulder = hardwareMap.dcMotor.get("mainShoulder");
         leftDrive = hardwareMap.dcMotor.get("leftDrive");
         rightDrive = hardwareMap.dcMotor.get("rightDrive");
-        mainServo = hardwareMap.servo.get("mainServo");
+        mainServo = hardwareMap.crservo.get("mainServo");
         markerServo = hardwareMap.servo.get("markerServo");
 		hand = hardwareMap.servo.get("hand");
 		armExtend = hardwareMap.crservo.get("armExtend");
 
-		mainServo.setPosition(position_mainServo);
+//		mainServo.setPosition(position_mainServo);
 		markerServo.setPosition(position_markerServo);
 		leftDrive.setDirection(DcMotor.Direction.REVERSE);
 		rightDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -144,12 +152,12 @@ public class MainGamepad extends LinearOpMode {
 			rightDrive.setPower(drivePower(1));
 			linearSlide.setPower(drivePower(2));
 			mainShoulder.setPower(drivePower(3));
-			
+
 			// Controls continuous servos
 			armExtend.setPower(conServo(0));
-			
+            mainServo.setPower(conServo(1));
 			// Controls servos
-			servoControl(0);
+//			servoControl(0);
 			servoControl(1);
 			servoControl(2);
 			
