@@ -18,10 +18,40 @@ public class MarkerToPit extends LinearOpMode {
 	private DcMotor rightDrive;
 	private CRServo mainServo;
 	private Servo markerServo;
-	
+
+    static final double COUNTS_PER_MOTOR_REV = 1440;
 	private double position_mainServo = 0.7; // Starts servo at position
 	private double position_markerServo = 0.0;
-	
+
+	private void driveForward(double power) {
+	    leftDrive.setPower(power);
+	    rightDrive.setPower(power);
+    }
+
+    private void stopDriving() {
+	    driveForward(0);
+    }
+
+	private void driveForwardDistance(double power, int distance) {
+	    leftDrive.setMode(DcMotor.RunMode.RESET_ENCODERS);
+	    rightDrive.setMode(DcMotor.RunMode.RESET_ENCODERS);
+
+	    leftDrive.setTargetPosition(distance);
+        rightDrive.setTargetPosition(distance);
+
+        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        driveForward(power);
+
+        while(leftDrive.isBusy() && rightDrive.isBusy()) { }
+
+        stopDriving();
+
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
 	private void run() {
 		linearSlide.setPower(1);
 		sleep(3000);
@@ -29,10 +59,7 @@ public class MarkerToPit extends LinearOpMode {
 		linearSlide.setPower(0);
 		mainServo.setPower(1);
 		sleep(200);
-		
-		leftDrive.setPower(-0.7);
-		rightDrive.setPower(-0.7);
-		sleep(500);
+
 		mainServo.setPower(0);
 		sleep(4500);
 		
@@ -85,6 +112,8 @@ public class MarkerToPit extends LinearOpMode {
         mainServo = hardwareMap.crservo.get("mainServo");
         markerServo = hardwareMap.servo.get("markerServo");
 
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		leftDrive.setDirection(DcMotor.Direction.REVERSE);
 		rightDrive.setDirection(DcMotor.Direction.FORWARD);
 	//	mainServo.setPosition(position_mainServo);
