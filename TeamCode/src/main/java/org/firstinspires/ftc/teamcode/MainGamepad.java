@@ -5,22 +5,21 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-@Disabled
+//@Disabled
 @TeleOp(name = "Main Gamepad")
 
 public class MainGamepad extends LinearOpMode {
 	
 	// Defines hardware
-	private DcMotor linearSlide = hardwareMap.dcMotor.get("linearSlide");
-	private DcMotor mainShoulder = hardwareMap.dcMotor.get("mainShoulder");
-	private DcMotor leftDrive = hardwareMap.dcMotor.get("leftDrive");
-	private DcMotor rightDrive = hardwareMap.dcMotor.get("rightDrive");
-	private Servo mainServo = hardwareMap.servo.get("mainServo");
-	private Servo markerServo = hardwareMap.servo.get("markerServo");
-	private Servo hand = hardwareMap.servo.get("hand");
-	private CRServo armExtend = hardwareMap.crservo.get("armExtend");
+	private DcMotor linearSlide;
+	private DcMotor mainShoulder;
+	private DcMotor leftDrive;
+	private DcMotor rightDrive;
+	private CRServo mainServo;
+	private Servo markerServo;
+	private Servo hand;
+	private CRServo armExtend;
 	
 	// Configures the main servo
 	private static final double MAIN_ADJUST = 0.01; // Amount to move servo each cycle (CYCLE_MS)
@@ -61,19 +60,21 @@ public class MainGamepad extends LinearOpMode {
 		}
 		return powerLvl;
 	}
-	
+
+
 	// Controls servos
 	private void servoControl(int servoID) {
 		switch (servoID) {
 			case 0: // mainServo
-				if (mainServo.getPosition() >= 0.0 && this.gamepad2.a) {
-					position_mainServo -= MAIN_ADJUST;
-					sleep(5);
-				} else if (mainServo.getPosition() <= 1.0 && this.gamepad2.b) {
-					position_mainServo += MAIN_ADJUST;
-					sleep(5);
-				}
-				mainServo.setPosition(position_mainServo);
+
+//				if (mainServo.getPosition() >= 0.0 && this.gamepad2.a) {
+//					position_mainServo -= MAIN_ADJUST;
+//					sleep(5);
+//				} else if (mainServo.getPosition() <= 1.0 && this.gamepad2.b) {
+//					position_mainServo += MAIN_ADJUST;
+//					sleep(5);
+//				}
+//				mainServo.setPosition(position_mainServo);
 				break;
 			case 1: // markerServo
 				if (this.gamepad2.x) {
@@ -119,6 +120,15 @@ public class MainGamepad extends LinearOpMode {
 		telemetry.update();
 		
 		// Initializes hardware
+        linearSlide = hardwareMap.dcMotor.get("linearSlide");
+        mainShoulder = hardwareMap.dcMotor.get("mainShoulder");
+        leftDrive = hardwareMap.dcMotor.get("leftDrive");
+        rightDrive = hardwareMap.dcMotor.get("rightDrive");
+        mainServo = hardwareMap.servo.get("mainServo");
+        markerServo = hardwareMap.servo.get("markerServo");
+		hand = hardwareMap.servo.get("hand");
+		armExtend = hardwareMap.crservo.get("armExtend");
+
 		mainServo.setPosition(position_mainServo);
 		markerServo.setPosition(position_markerServo);
 		leftDrive.setDirection(DcMotor.Direction.REVERSE);

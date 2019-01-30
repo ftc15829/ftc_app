@@ -6,17 +6,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-@Disabled
+//@Disabled
 @Autonomous(name = "Pit To Marker To Pit")
 
 public class PitToMarkerToPit extends LinearOpMode {
 	
 	// Defines hardware
-	private DcMotor linearSlide = hardwareMap.dcMotor.get("linearSlide");
-	private DcMotor leftDrive = hardwareMap.dcMotor.get("leftDrive");
-	private DcMotor rightDrive = hardwareMap.dcMotor.get("rightDrive");
-	private Servo mainServo = hardwareMap.servo.get("mainServo");
-	private Servo markerServo = hardwareMap.servo.get("markerServo");
+	private DcMotor linearSlide;
+	private DcMotor leftDrive;
+	private DcMotor rightDrive;
+	private Servo mainServo;
+	private Servo markerServo;
 	
 	private double position_mainServo = 0.7; // Starts servo at position
 	private double position_markerServo = 0.0;
@@ -92,6 +92,12 @@ public class PitToMarkerToPit extends LinearOpMode {
 		telemetry.update();
 
 		// Initializes hardware
+        linearSlide = hardwareMap.dcMotor.get("linearSlide");
+        leftDrive = hardwareMap.dcMotor.get("leftDrive");
+        rightDrive = hardwareMap.dcMotor.get("rightDrive");
+        mainServo = hardwareMap.servo.get("mainServo");
+        markerServo = hardwareMap.servo.get("markerServo");
+
 		leftDrive.setDirection(DcMotor.Direction.REVERSE);
 		rightDrive.setDirection(DcMotor.Direction.FORWARD);
 		mainServo.setPosition(position_mainServo);
