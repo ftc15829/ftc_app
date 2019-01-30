@@ -33,7 +33,7 @@ public class MainGamepad extends LinearOpMode {
 	
 	// Sets the power of the various motors
 	private double drivePower(int motorID) {
-	    double powerLvl = 0.0; // Initializes power level with a default value of 0
+		double powerLvl = 0.0; // Initializes power level with a default value of 0
 		double driveMod = 1; // Modifier for left and right drive's speed control
 		final double CORRECTION = 1.0; // Adjusts leftDrives power to account for unwanted steering
 		
