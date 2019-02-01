@@ -91,7 +91,7 @@ public class PitToMarkerToPit extends LinearOpMode {
 	public void runOpMode() {
 
 		// Updates telemetry (log) to show it is running
-		telemetry.addData("Status", "Updated!");
+		telemetry.addData("Status", "Initialized");
 		telemetry.update();
 
 		// Initializes hardware
