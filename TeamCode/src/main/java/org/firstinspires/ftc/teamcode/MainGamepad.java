@@ -15,15 +15,13 @@ public class MainGamepad extends LinearOpMode {
     private DcMotor leftDrive;
     private DcMotor rightDrive;
     private DcMotor linearSlide;
-//	private DcMotor sweeperArm;
-//    private DcMotor dunkArm;
+	private DcMotor sweeperArm;
+    private DcMotor dunkArm;
+    private DcMotor dunkSlide;
+    private CRServo sweeper;
     private CRServo linearServo;
-//	private CRServo sweeper;
-//    private Servo markerServo;
+    private Servo markerServo;
 
-    // Sets initialization position
-	private double position_markerServo = 0.0;
-	
 	// Sets the power of the various motors
 	private double drivePower(int id) {
 		double power = 0.0; // Initializes power level with a default value of 0
@@ -102,16 +100,19 @@ public class MainGamepad extends LinearOpMode {
         leftDrive = hardwareMap.dcMotor.get("leftDrive");
         rightDrive = hardwareMap.dcMotor.get("rightDrive");
         linearSlide = hardwareMap.dcMotor.get("linearSlide");
+        sweeperArm = hardwareMap.dcMotor.get("sweeperArm");
+        dunkArm = hardwareMap.dcMotor.get("dunkArm");
+        dunkSlide = hardwareMap.dcMotor.get("dunkSlide");
         linearServo = hardwareMap.crservo.get("linearServo");
-//        sweeper = hardwareMap.crservo.get("sweeper");
-//        markerServo = hardwareMap.servo.get("markerServo");
-
+        sweeper = hardwareMap.crservo.get("sweeper");
+        markerServo = hardwareMap.servo.get("markerServo");
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-		rightDrive.setDirection(DcMotor.Direction.FORWARD);
-
-//        markerServo.setPosition(position_markerServo);
+        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        sweeperArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        dunkArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        dunkSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        markerServo.setPosition(0.0);
 
         waitForStart();
 		
@@ -122,14 +123,14 @@ public class MainGamepad extends LinearOpMode {
 			leftDrive.setPower(drivePower(0));
 			rightDrive.setPower(drivePower(1));
 			linearSlide.setPower(drivePower(2));
-//            dunkArm.setPower(drivePower(3));
+            dunkArm.setPower(drivePower(3));
 
 			// Controls continuous servos
             linearServo.setPower(conServo(0));
-//            sweeper.setPower(conServo(1));
+            sweeper.setPower(conServo(1));
 
 			// Controls servos
-//            markerServo.setPosition(markerServo.getPosition() + servo(0));
+            markerServo.setPosition(markerServo.getPosition() + servo(0));
 
 			// Updates telemetry to show power levels
 			telemetry.addData("Motors", "left (%.2f), right (%.2f)", drivePower(0), drivePower(1));
