@@ -11,11 +11,19 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 public class Test extends LinearOpMode {
 	
 	public void runOpMode() {
-		ElapsedTime runtime = new ElapsedTime();
+		telemetry.addData("Status", "Initialized");
+		telemetry.update();
+		
 		waitForStart();
+		
 		while (opModeIsActive()) {
-			telemetry.addData("Time: ", "Elapsed Time: " + runtime);
+			telemetry.addData("Status", "Running");
 			telemetry.update();
+			
+			if(isStopRequested()) {
+				telemetry.addData("Status", "Stopping");
+				telemetry.update();
+			}
 		}
 	}
 }
