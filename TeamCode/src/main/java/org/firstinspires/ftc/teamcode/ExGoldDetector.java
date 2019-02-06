@@ -35,9 +35,6 @@ import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-
-@TeleOp(name="GoldAlign Example", group="DogeCV")
-
 public class ExGoldDetector extends LinearOpMode
 {
     // Detector object
