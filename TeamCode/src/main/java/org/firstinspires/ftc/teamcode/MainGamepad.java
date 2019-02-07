@@ -9,133 +9,152 @@ import com.qualcomm.robotcore.hardware.Servo;
 //@Disabled
 @TeleOp(name = "Main Gamepad")
 
-public class MainGamepad extends LinearOpMode {
-	
-	// Defines hardware
+public class MainGamepad extends LinearOpMode
+{
+
+    // Defines hardware
     private DcMotor leftDrive;
     private DcMotor rightDrive;
     private DcMotor linearSlide;
-	private DcMotor sweeperArm;
+    private DcMotor intakeArm;
     private DcMotor dunkArm;
     private DcMotor dunkSlide;
-    private CRServo sweeper;
+    private CRServo intake;
     private CRServo linearServo;
-    private Servo markerServo;
+//    private Servo markerServo;
 
-	// Sets the power of the various motors
-	private double drivePower(int id) {
-		double power = 0.0; // Initializes power level with a default value of 0
-		double driveMod = 1; // Modifier for left and right drive's speed control
-		final double CORRECTION = 1.0; // Adjusts leftDrives power to account for unwanted steering
-		
-		// Adjusts drive speed modifier
-		if (this.gamepad1.left_bumper)
-			driveMod = 0.5;
-		if (this.gamepad1.right_bumper)
-			driveMod = 0.75;
-		
-		// Takes the motor ID and sets the power
-		switch (id) {
-			case 0: // leftDrive
-				power = (this.gamepad1.left_stick_y * driveMod) * CORRECTION;
-				break;
-			case 1: // rightDrive
-				power = (this.gamepad1.right_stick_y * driveMod);
-				break;
-			case 2: // linearSlide
-				power = this.gamepad2.left_stick_y * -0.5;
-				break;
-			case 3: // sweeper
-				power = this.gamepad2.right_stick_y * 0.5;
-				break;
-		}
-		return power;
-	}
+    // Sets the power of the various motors
+    private double drivePower(int id)
+    {
+        double power = 0.0; // Initializes power level with a default value of 0
+        double driveMod = 1; // Modifier for left and right drive's speed control
+        final double CORRECTION = 1.0; // Adjusts leftDrives power to account for unwanted steering
+
+        // Adjusts drive speed modifier
+        if (this.gamepad1.left_bumper)
+            driveMod = 0.5;
+        if (this.gamepad1.right_bumper)
+            driveMod = 0.75;
+
+        // Takes the motor ID and sets the power
+        switch (id)
+        {
+            case 0: // leftDrive
+                power = (this.gamepad1.left_stick_y * driveMod) * CORRECTION;
+                break;
+            case 1: // rightDrive
+                power = (this.gamepad1.right_stick_y * driveMod);
+                break;
+            case 2: // linearSlide
+                power = this.gamepad2.left_stick_y * 0.5;
+                break;
+            case 3: // intake
+                power = this.gamepad2.right_stick_y * 0.5;
+                break;
+        }
+        return power;
+    }
 
 
-	// Controls servos
-	private double servo(int id) {
-	    double change = 0.0;
+    // Controls servos
+    private double servo(int id)
+    {
+        double change = 0.0;
         double INCREMENT = 0.1;
 
-		switch (id) {
-			case 0: // markerServo
-				if (this.gamepad2.x)
-					change = INCREMENT;
-				else if (this.gamepad2.y)
-					change = -INCREMENT;
-				break;
-		}
-		return change;
-	}
-	
-	private double conServo(int id) {
-		double power = 0.0; // Initializes power level with a default value of 0
+        switch (id)
+        {
+//			case 0: // markerServo
+//				if (this.gamepad2.x && markerServo.getPosition() < 0.8)
+//					change = INCREMENT;
+//				else if (!this.gamepad2.x && markerServo.getPosition() <= 0.8)
+//				    change = (markerServo.getPosition() > 0 ? -INCREMENT : 0);
+//				else if (markerServo.getPosition() >= 0.8 && this.gamepad2.x)
+//                    change = -INCREMENT;
+//				break;
+        }
+        return change;
+    }
 
-		switch (id) {
-			case 0: // linearServo
-				if (this.gamepad2.right_bumper)
-					power = 1.0;
-				else if (this.gamepad2.left_bumper)
-					power = -1.0;
-				break;
-            case 1: // sweeper
-                if(this.gamepad2.a)
+    private double conServo(int id)
+    {
+        double power = 0.0; // Initializes power level with a default value of 0
+
+        switch (id)
+        {
+            case 0: // linearServo
+                if (this.gamepad2.right_bumper)
+                    power = 1.0;
+                else if (this.gamepad2.left_bumper)
+                    power = -1.0;
+                break;
+            case 1: // intake
+                if (this.gamepad2.a)
                     power = 1.0;
                 else if (this.gamepad2.b)
                     power = -1.0;
                 break;
-		}
-		return power;
-	}
-	
-	// Automatically runs
-	@Override
-	public void runOpMode() {
-		// Updates telemetry (log) to show it is running
-		telemetry.addData("Status", "Initialized");
-		telemetry.update();
-		
-		// Initializes hardware
+            case 2:
+                if (this.gamepad2.left_trigger != 0)
+                    power = 1.0;
+                else if (this.gamepad2.right_trigger != 0)
+                    power = -1.0;
+        }
+        return power;
+    }
+
+    // Automatically runs
+    @Override
+    public void runOpMode()
+    {
+        // Updates telemetry (log) to show it is running
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        // Initializes hardware
         leftDrive = hardwareMap.dcMotor.get("leftDrive");
         rightDrive = hardwareMap.dcMotor.get("rightDrive");
         linearSlide = hardwareMap.dcMotor.get("linearSlide");
-        sweeperArm = hardwareMap.dcMotor.get("sweeperArm");
+        intakeArm = hardwareMap.dcMotor.get("intakeArm");
         dunkArm = hardwareMap.dcMotor.get("dunkArm");
         dunkSlide = hardwareMap.dcMotor.get("dunkSlide");
         linearServo = hardwareMap.crservo.get("linearServo");
-        sweeper = hardwareMap.crservo.get("sweeper");
-        markerServo = hardwareMap.servo.get("markerServo");
+        intake = hardwareMap.crservo.get("intake");
+//        markerServo = hardwareMap.servo.get("markerServo");
+        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        sweeperArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         dunkArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         dunkSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        markerServo.setPosition(0.0);
+//        markerServo.setPosition(0.0);
 
         waitForStart();
-		
-		// Game loop
-		while (opModeIsActive()) {
-			
-			// Controls motors
-			leftDrive.setPower(drivePower(0));
-			rightDrive.setPower(drivePower(1));
-			linearSlide.setPower(drivePower(2));
+
+        // Game loop
+        while (opModeIsActive())
+        {
+
+            // Controls motors
+            leftDrive.setPower(drivePower(0));
+            rightDrive.setPower(drivePower(1));
+            linearSlide.setPower(drivePower(2));
             dunkArm.setPower(drivePower(3));
 
-			// Controls continuous servos
+            // Controls continuous servos
             linearServo.setPower(conServo(0));
-            sweeper.setPower(conServo(1));
+            intake.setPower(conServo(1));
 
-			// Controls servos
-            markerServo.setPosition(markerServo.getPosition() + servo(0));
 
-			// Updates telemetry to show power levels
-			telemetry.addData("Motors", "left (%.2f), right (%.2f)", drivePower(0), drivePower(1));
-			telemetry.addData("Linear Slide", "pwr (%.2f)", drivePower(2));
-			telemetry.update();
-		}
-	}
+            // Controls servos
+//            markerServo.setPosition(markerServo.getPosition() + servo(0));
+
+            // Updates telemetry to show power levels
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)", drivePower(0), drivePower(1));
+            telemetry.addData("Linear Slide", "pwr (%.2f)", drivePower(2));
+            telemetry.update();
+        }
+    }
 }

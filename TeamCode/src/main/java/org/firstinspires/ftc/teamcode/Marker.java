@@ -21,7 +21,7 @@ public class Marker extends LinearOpMode
     private DcMotor linearSlide;
     private CRServo linearServo;
     private Servo markerServo;
-//    private GoldAlignDetector detector;
+    private GoldAlignDetector detector;
 
     private void drive(double power)
     {
@@ -37,16 +37,12 @@ public class Marker extends LinearOpMode
         leftDrive.setTargetPosition((int) (revolutions * 1440));
         rightDrive.setTargetPosition((int) (revolutions * 1440));
 
-
         leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         drive(power);
 
-        while (leftDrive.isBusy() && rightDrive.isBusy())
-        {
-
-        }
+        while (leftDrive.isBusy() && rightDrive.isBusy()) { }
 
         stopDriving();
 
@@ -68,19 +64,21 @@ public class Marker extends LinearOpMode
         linearSlide.setTargetPosition(-3440);
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         linearSlide.setPower(0.5);
-        while (linearSlide.isBusy()) {
+        while (linearSlide.isBusy())
+        {
 
         }
         linearSlide.setPower(0);
 
-        sleep(3000);
-//        driveDistance(2, 0.5);
+        sleep(1000);
+        driveDistance(0.5, 0.2);
 
         linearSlide.setMode(DcMotor.RunMode.RESET_ENCODERS);
         linearSlide.setTargetPosition(3440);
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         linearSlide.setPower(0.5);
-        while (linearSlide.isBusy()) {
+        while (linearSlide.isBusy())
+        {
 
         }
         linearSlide.setPower(0);
@@ -113,14 +111,63 @@ public class Marker extends LinearOpMode
 
     }
 
+    private void alignGold()
+    {
+        if (!detector.isFound())
+        {
+            turn(-0.3, 0.2);
+            if (!detector.isFound())
+            {
+                turn(0.6, 0.2);
+                if (!detector.isFound()) {
+                    end();
+                }
+            }
+        }
+        if (detector.getAligned())
+        {
+        }
+        else if (detector.getXPosition() < 230)
+        {
+            while (!detector.getAligned())
+            {
+                leftDrive.setPower(-0.8);
+                rightDrive.setPower(0.8);
+            }
+        }
+        else if (detector.getXPosition() > 310)
+        {
+            while (!detector.getAligned())
+            {
+                leftDrive.setPower(0.8);
+                rightDrive.setPower(-0.8);
+
+            }
+        }
+    }
+
+    private void end()
+    {
+        detector.disable();
+        stop();
+    }
 
     private void run()
     {
         telemetry.addData("Status", "Running");
         telemetry.update();
-        lower();
-        sleep(5000);
-        stop();
+        while (!isStopRequested())
+        {
+//            lower();
+//            alignGold();
+//            driveDistance(2, 1);
+//            turn(2, 1);
+//            driveDistance(2, 1);
+
+            driveDistance(2,0.2);
+            end();
+        }
+        end();
     }
 
     @Override
@@ -139,22 +186,23 @@ public class Marker extends LinearOpMode
         markerServo = hardwareMap.servo.get("markerServo");
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
         markerServo.setPosition(0.0);
 
 
-//        detector = new GoldAlignDetector(); // Create detector
-//        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
-//        detector.useDefaults(); // Set detector to use default settings
-//        detector.alignSize = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
-//        detector.alignPosOffset = 0; // How far from center frame to offset this alignment zone.
-//        detector.downscale = 0.4; // How much to downscale the input frames
-//        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
-//        detector.maxAreaScorer.weight = 0.005;
-//        detector.ratioScorer.weight = 5;
-//        detector.ratioScorer.perfectRatio = 1.0; // Ratio adjustment
-//        detector.enable(); // Start the detector!
+        detector = new GoldAlignDetector(); // Create detector
+        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
+        detector.useDefaults(); // Set detector to use default settings
+        detector.alignSize = 200; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
+        detector.alignPosOffset = 0; // How far from center frame to offset this alignment zone.
+        detector.downscale = 0.4; // How much to downscale the input frames
+        detector.areaScoringMethod = DogeCV.AreaScoringMethod.PERFECT_AREA; // Can also be PERFECT_AREA
+        detector.perfectAreaScorer.perfectArea = 10000;
+        detector.maxAreaScorer.weight = 0.005;
+        detector.ratioScorer.weight = 5;
+        detector.ratioScorer.perfectRatio = 1.0; // Ratio adjustment
+        detector.enable(); // Start the detector!
 
         waitForStart();
 
