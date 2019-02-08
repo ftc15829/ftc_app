@@ -20,7 +20,6 @@ public class Marker extends LinearOpMode
     private DcMotor rightDrive;
     private DcMotor linearSlide;
     private CRServo linearServo;
-    private Servo markerServo;
     private GoldAlignDetector detector;
 
     private void drive(double power)
@@ -31,8 +30,8 @@ public class Marker extends LinearOpMode
 
     private void driveDistance(double revolutions, double power)
     {
-        leftDrive.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        rightDrive.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftDrive.setTargetPosition((int) (revolutions * 1440));
         rightDrive.setTargetPosition((int) (revolutions * 1440));
@@ -46,8 +45,8 @@ public class Marker extends LinearOpMode
 
         stopDriving();
 
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 
@@ -60,7 +59,7 @@ public class Marker extends LinearOpMode
     {
         telemetry.addData("Sub Status", "Lowering");
         telemetry.update();
-        linearSlide.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlide.setTargetPosition(-3440);
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         linearSlide.setPower(0.5);
@@ -73,7 +72,7 @@ public class Marker extends LinearOpMode
         sleep(1000);
         driveDistance(0.5, 0.2);
 
-        linearSlide.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlide.setTargetPosition(3440);
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         linearSlide.setPower(0.5);
@@ -82,32 +81,28 @@ public class Marker extends LinearOpMode
 
         }
         linearSlide.setPower(0);
-        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     private void turn(double turnUnit, double power)
     {
-        leftDrive.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        rightDrive.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftDrive.setTargetPosition((int) (turnUnit * 1440));
         rightDrive.setTargetPosition((int) (-turnUnit * 1440));
-
 
         leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         drive(power);
 
-        while (leftDrive.isBusy() && rightDrive.isBusy())
-        {
-
-        }
+        while (leftDrive.isBusy() && rightDrive.isBusy()) { /*wait*/ }
 
         stopDriving();
 
-        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
-        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
@@ -127,20 +122,20 @@ public class Marker extends LinearOpMode
         if (detector.getAligned())
         {
         }
-        else if (detector.getXPosition() < 230)
+        else if (detector.getXPosition() < 320 - (detector.alignSize / 2))
         {
             while (!detector.getAligned())
             {
-                leftDrive.setPower(-0.8);
-                rightDrive.setPower(0.8);
+                leftDrive.setPower(-0.2);
+                rightDrive.setPower(0.2);
             }
         }
-        else if (detector.getXPosition() > 310)
+        else if (detector.getXPosition() > 320 + (detector.alignSize / 2))
         {
             while (!detector.getAligned())
             {
-                leftDrive.setPower(0.8);
-                rightDrive.setPower(-0.8);
+                leftDrive.setPower(0.2);
+                rightDrive.setPower(-0.2);
 
             }
         }
@@ -158,13 +153,11 @@ public class Marker extends LinearOpMode
         telemetry.update();
         while (!isStopRequested())
         {
-//            lower();
-//            alignGold();
-//            driveDistance(2, 1);
-//            turn(2, 1);
-//            driveDistance(2, 1);
-
-            driveDistance(2,0.2);
+            lower();
+            alignGold();
+            driveDistance(2, 0.7);
+            turn(2, 0.2);
+            driveDistance(2, 0.7);
             end();
         }
         end();
@@ -183,12 +176,10 @@ public class Marker extends LinearOpMode
         rightDrive = hardwareMap.dcMotor.get("rightDrive");
         linearSlide = hardwareMap.dcMotor.get("linearSlide");
         linearServo = hardwareMap.crservo.get("linearServo");
-        markerServo = hardwareMap.servo.get("markerServo");
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
-        markerServo.setPosition(0.0);
 
 
         detector = new GoldAlignDetector(); // Create detector
@@ -206,23 +197,6 @@ public class Marker extends LinearOpMode
 
         waitForStart();
 
-//        if (detector.getAligned())
-//        {
-//        }
-//        else if (detector.getXPosition() < 230)
-//        {
-//            while (!detector.getAligned())
-//            {
-//                //Turn left
-//            }
-//        }
-//        else if (detector.getXPosition() > 310)
-//        {
-//            while (!detector.getAligned())
-//            {
-//                //turn right
-//            }
-//        }
         run();// Runs main function
     }
 }
