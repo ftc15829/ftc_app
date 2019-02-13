@@ -60,9 +60,9 @@ public class MainGamepad extends LinearOpMode
 
             case 2: // linearSlide
                 if (this.gamepad2.dpad_up)
-                    power = 1;
+                    power = 0.5;
                 else if (this.gamepad2.dpad_down)
-                    power = 1;
+                    power = -0.5;
                 break;
 
             case 3: // intakeArm
@@ -81,9 +81,9 @@ public class MainGamepad extends LinearOpMode
                 break;
             case 6:
             if (this.gamepad2.dpad_up)
-                power = -1;
+                power = -0.5;
             else if (this.gamepad2.dpad_down)
-                power = -1;
+                power = 0.5;
             break;
 
         }
@@ -145,8 +145,8 @@ public class MainGamepad extends LinearOpMode
         // Initializes hardware
         leftDrive = hardwareMap.dcMotor.get("leftDrive");
         rightDrive = hardwareMap.dcMotor.get("rightDrive");
-        linearSlide = hardwareMap.dcMotor.get("linearSlideRight");
-        linearSlide2 = hardwareMap.dcMotor.get("linearSlideLeft");
+        linearSlide = hardwareMap.dcMotor.get("linearSlide");
+        linearSlide2 = hardwareMap.dcMotor.get("linearSlide2");
         intakeArm = hardwareMap.dcMotor.get("intakeArm");
         dunkArm = hardwareMap.dcMotor.get("dunkArm");
         dunkSlide = hardwareMap.dcMotor.get("dunkSlide");
