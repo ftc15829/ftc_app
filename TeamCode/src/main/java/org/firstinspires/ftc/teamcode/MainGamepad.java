@@ -1,12 +1,12 @@
 /*
-    E-transfer from onBot Java to android studio for gold sensor
-    E-shout-out to team #### mechanical memes
-    C-control scheme
-    E-skipped blocks because we knew how limiting it would be in the future
-    C-proud of autonomous; big learning curve when dealing with encoders but it worked out really well
-    C-hot fixing
-    C-started off with amazing autonomous
-*/
+ * E-transfer from onBot Java to android studio for gold sensor
+ * E-shout-out to team #### mechanical memes
+ * C-control scheme
+ * E-skipped blocks because we knew how limiting it would be in the future
+ * C-proud of autonomous; big learning curve when dealing with encoders but it worked out really well
+ * C-hot fixing
+ * C-started off with amazing autonomous
+ */
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -57,7 +57,7 @@ public class MainGamepad extends LinearOpMode
                 power = (this.gamepad1.right_stick_y * driveMod);
                 break;
 
-            case 2: // linearSlides
+            case 2: // linearSlide
                 if (this.gamepad2.dpad_up/* && linearSlide.getCurrentPosition() < (int)(5.0 * 1440)*/)
                     power = 0.5;
                 else if (this.gamepad2.dpad_down/* && linearSlide.getCurrentPosition() > 0*/)
@@ -65,19 +65,19 @@ public class MainGamepad extends LinearOpMode
                 break;
 
             case 3: // intakeArm
-                if (intakeArm.getCurrentPosition() < (int)(0.5 * 1440) && intakeArm.getCurrentPosition() > 0)
-                power = -this.gamepad2.right_stick_y * 0.6;
+                if (intakeArm.getCurrentPosition() < (int) (0.91 * 1440) && intakeArm.getCurrentPosition() > 0)
+                    power = -this.gamepad2.right_stick_y * 0.6;
                 break;
 
             case 4: // dunkArm
-                if (dunkArm.getCurrentPosition() < (int)(0.7 * 1440) && dunkArm.getCurrentPosition() > 0)
-                power = this.gamepad2.left_stick_y * 1;
+                //if (dunkArm.getCurrentPosition() < (int) (0.7 * 1440) && dunkArm.getCurrentPosition() > 0)
+                    power = this.gamepad2.left_stick_y * 1;
                 break;
 
             case 5: // dunkSlide
-                if (this.gamepad2.left_bumper)
+                if (this.gamepad2.left_bumper/* && dunkSlide.getCurrentPosition() > (int) (1.0 * 1440)*/)
                     power = -1;
-                else if (this.gamepad2.right_bumper)
+                else if (this.gamepad2.right_bumper/* && dunkSlide.getCurrentPosition() < 0*/)
                     power = 1;
                 break;
 
@@ -151,8 +151,8 @@ public class MainGamepad extends LinearOpMode
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        intakeArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        dunkArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        dunkArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         dunkSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
