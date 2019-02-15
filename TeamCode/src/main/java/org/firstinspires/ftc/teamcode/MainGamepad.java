@@ -59,9 +59,9 @@ public class MainGamepad extends LinearOpMode
                 break;
 
             case 2: // linearSlide
-                if (this.gamepad2.dpad_up)
+                if (this.gamepad2.dpad_up && linearSlide.getCurrentPosition() < (int)(1.5 * 1440) && linearSlide2.getCurrentPosition() < (int)(1.5 * 1440))
                     power = 0.5;
-                else if (this.gamepad2.dpad_down)
+                else if (this.gamepad2.dpad_down && linearSlide.getCurrentPosition() > 0 && linearSlide2.getCurrentPosition() > 0)
                     power = -0.5;
                 break;
 
@@ -156,12 +156,14 @@ public class MainGamepad extends LinearOpMode
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        linearSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        linearSlide2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intakeArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         dunkArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         dunkSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        markerServo.setPosition(0.0);
+        linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
         waitForStart();
 
