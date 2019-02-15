@@ -27,7 +27,6 @@ public class MainGamepad extends LinearOpMode
     private DcMotor leftDrive;
     private DcMotor rightDrive;
     private DcMotor linearSlide;
-    private DcMotor linearSlide2;
     private DcMotor intakeArm;
     private DcMotor dunkArm;
     private DcMotor dunkSlide;
@@ -58,18 +57,20 @@ public class MainGamepad extends LinearOpMode
                 power = (this.gamepad1.right_stick_y * driveMod);
                 break;
 
-            case 2: // linearSlide
-                if (this.gamepad2.dpad_up && linearSlide.getCurrentPosition() < (int)(1.5 * 1440) && linearSlide2.getCurrentPosition() < (int)(1.5 * 1440))
+            case 2: // linearSlides
+                if (this.gamepad2.dpad_up/* && linearSlide.getCurrentPosition() < (int)(5.0 * 1440)*/)
                     power = 0.5;
-                else if (this.gamepad2.dpad_down && linearSlide.getCurrentPosition() > 0 && linearSlide2.getCurrentPosition() > 0)
+                else if (this.gamepad2.dpad_down/* && linearSlide.getCurrentPosition() > 0*/)
                     power = -0.5;
                 break;
 
             case 3: // intakeArm
+                if (intakeArm.getCurrentPosition() < (int)(0.5 * 1440) && intakeArm.getCurrentPosition() > 0)
                 power = -this.gamepad2.right_stick_y * 0.6;
                 break;
 
             case 4: // dunkArm
+                if (dunkArm.getCurrentPosition() < (int)(0.7 * 1440) && dunkArm.getCurrentPosition() > 0)
                 power = this.gamepad2.left_stick_y * 1;
                 break;
 
@@ -79,12 +80,6 @@ public class MainGamepad extends LinearOpMode
                 else if (this.gamepad2.right_bumper)
                     power = 1;
                 break;
-            case 6:
-            if (this.gamepad2.dpad_up)
-                power = -0.5;
-            else if (this.gamepad2.dpad_down)
-                power = 0.5;
-            break;
 
         }
         return power;
@@ -146,7 +141,6 @@ public class MainGamepad extends LinearOpMode
         leftDrive = hardwareMap.dcMotor.get("leftDrive");
         rightDrive = hardwareMap.dcMotor.get("rightDrive");
         linearSlide = hardwareMap.dcMotor.get("linearSlide");
-        linearSlide2 = hardwareMap.dcMotor.get("linearSlide2");
         intakeArm = hardwareMap.dcMotor.get("intakeArm");
         dunkArm = hardwareMap.dcMotor.get("dunkArm");
         dunkSlide = hardwareMap.dcMotor.get("dunkSlide");
@@ -157,13 +151,9 @@ public class MainGamepad extends LinearOpMode
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        linearSlide2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intakeArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         dunkArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        dunkSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        dunkSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
 
@@ -175,7 +165,6 @@ public class MainGamepad extends LinearOpMode
             leftDrive.setPower(drivePower(0));
             rightDrive.setPower(drivePower(1));
             linearSlide.setPower(drivePower(2));
-            linearSlide2.setPower(drivePower(6));
             intakeArm.setPower(drivePower(3));
             dunkArm.setPower(drivePower(4));
             dunkSlide.setPower(drivePower(5));
@@ -184,13 +173,15 @@ public class MainGamepad extends LinearOpMode
             linearServo.setPower(conServo(0));
             intake.setPower(conServo(1));
 
-
             // Controls servos
-//            markerServo.setPosition(markerServo.getPosition() + servo(0));
 
             // Updates telemetry to show power levels
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", drivePower(0), drivePower(1));
             telemetry.addData("Linear Slide", "pwr (%.2f)", drivePower(2));
+            telemetry.addData("dunkSlide", dunkSlide.getCurrentPosition());
+            telemetry.addData("linearSlide", linearSlide.getCurrentPosition());
+            telemetry.addData("intakeArm", intakeArm.getCurrentPosition());
+            telemetry.addData("dunkArm", dunkArm.getCurrentPosition());
             telemetry.update();
         }
     }
