@@ -9,7 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 //@Disabled
 @Autonomous(name = "TestingHware")
 
-public class TestingHware extends LinearOpMode {
+public class TestingHware extends LinearOpMode
+{
 
 //	// Defines hardware
 //	private DcMotor leftDrive;
@@ -18,12 +19,14 @@ public class TestingHware extends LinearOpMode {
 //	private CRServo linearServo;
 //	private Servo markerServo;
 	
-	private void drive(double power) {
+	private void drive(double power)
+	{
 		Hware.leftDrive.setPower(power);
 		Hware.rightDrive.setPower(power);
 	}
 	
-	private void driveDistance(double revolutions, double power) {
+	private void driveDistance(double revolutions, double power)
+	{
 		Hware.leftDrive.setMode(DcMotor.RunMode.RESET_ENCODERS);
 		Hware.rightDrive.setMode(DcMotor.RunMode.RESET_ENCODERS);
 		
@@ -36,7 +39,8 @@ public class TestingHware extends LinearOpMode {
 		
 		drive(power);
 		
-		while (Hware.leftDrive.isBusy() && Hware.rightDrive.isBusy()) {
+		while (Hware.leftDrive.isBusy() && Hware.rightDrive.isBusy())
+		{
 		
 		}
 		
@@ -47,11 +51,13 @@ public class TestingHware extends LinearOpMode {
 		
 	}
 	
-	private void stopDriving() {
+	private void stopDriving()
+	{
 		drive(0);
 	}
 	
-	private void lowerSlide() {
+	private void lowerSlide()
+	{
         /*
         lower slide and turn servo
          */
@@ -61,38 +67,21 @@ public class TestingHware extends LinearOpMode {
          */
 	}
 	
-	private void turn(double turnUnit, double power) {
-		Hware.leftDrive.setMode(DcMotor.RunMode.RESET_ENCODERS);
-		Hware.rightDrive.setMode(DcMotor.RunMode.RESET_ENCODERS);
-		
-		Hware.leftDrive.setTargetPosition((int) (turnUnit * 1440));
-		Hware.rightDrive.setTargetPosition((int) (-turnUnit * 1440));
-		
-		
-		Hware.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		Hware.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		
-		drive(power);
-		
-		while (Hware.leftDrive.isBusy() && Hware.rightDrive.isBusy()) {
-		
-		}
-		
-		stopDriving();
-		
-		Hware.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
-		Hware.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+	private void turn(double turnUnit, double power)
+	{
 		
 	}
 	
 	
-	private void run() {
-		turn(1,1);
+	private void run()
+	{
+		turn(1, 1);
 		stop();
 	}
 	
 	@Override
-	public void runOpMode() {
+	public void runOpMode()
+	{
 		
 		// Updates telemetry (log) to show it is running
 		telemetry.addData("Status", "Initialized");

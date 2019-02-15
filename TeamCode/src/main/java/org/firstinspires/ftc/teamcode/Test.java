@@ -8,19 +8,23 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 //@Disabled
 @TeleOp(name = "Test")
 
-public class Test extends LinearOpMode {
+public class Test extends LinearOpMode
+{
 	
-	public void runOpMode() {
+	public void runOpMode()
+	{
 		telemetry.addData("Status", "Initialized");
 		telemetry.update();
 		
 		waitForStart();
 		
-		while (opModeIsActive()) {
+		while (opModeIsActive())
+		{
 			telemetry.addData("Status", "Running");
 			telemetry.update();
 			
-			if(isStopRequested()) {
+			if (isStopRequested())
+			{
 				telemetry.addData("Status", "Stopping");
 				telemetry.update();
 			}
