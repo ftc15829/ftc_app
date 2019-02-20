@@ -61,7 +61,8 @@ public class Marker extends LinearOpMode
 	{
 		telemetry.addData("Sub Status", "Lowering");
 		telemetry.update();
-		linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		
+//		linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		linearSlide.setTargetPosition(-3440);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		linearSlide.setPower(0.5);
@@ -71,10 +72,10 @@ public class Marker extends LinearOpMode
 		}
 		linearSlide.setPower(0);
 		
-		sleep(1000);
-		driveDistance(0.5, 0.2);
+		sleep(500);
+		driveDistance(0.25, 0.1);
 		
-		linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//		linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		linearSlide.setTargetPosition(3440);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		linearSlide.setPower(0.5);
@@ -157,11 +158,12 @@ public class Marker extends LinearOpMode
 		telemetry.update();
 		while (!isStopRequested())
 		{
+			
 			lower();
-			alignGold();
-			driveDistance(2, 0.7);
-			turn(2, 0.2);
-			driveDistance(2, 0.7);
+//			alignGold();
+//			driveDistance(2, 0.7);
+//			turn(2, 0.2);
+//			driveDistance(2, 0.7);
 			end();
 		}
 		end();

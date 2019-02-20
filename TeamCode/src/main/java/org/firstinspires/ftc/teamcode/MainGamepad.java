@@ -175,6 +175,9 @@ public class MainGamepad extends LinearOpMode
 			
 			// Controls servos
 			
+			
+			// Reset Encoders
+			
 			// Updates telemetry to show power levels
 			telemetry.addData("Motors", "left (%.2f), right (%.2f)", drivePower(0), drivePower(1));
 			telemetry.addData("Linear Slide", "pwr (%.2f)", drivePower(2));
