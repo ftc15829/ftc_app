@@ -32,7 +32,7 @@ public class MainGamepad extends LinearOpMode
 	private DcMotor dunkSlide;
 	private CRServo intake;
 	private CRServo linearServo;
-	
+	private CRServo grabExtend;
 	// Sets the power of the various motors
 	private double drivePower(int id)
 	{
@@ -45,7 +45,7 @@ public class MainGamepad extends LinearOpMode
 			driveMod = 0.5;
 		if (this.gamepad1.right_bumper)
 			driveMod = 0.75;
-		
+		 
 		// Takes the motor ID and sets the power
 		switch (id)
 		{
@@ -65,7 +65,7 @@ public class MainGamepad extends LinearOpMode
 				break;
 			
 			case 3: // intakeArm
-				if (intakeArm.getCurrentPosition() < (int) (0.91 * 1440) && intakeArm.getCurrentPosition() > 0)
+			//	if (intakeArm.getCurrentPosition() < (int) (0.91 * 1440) && intakeArm.getCurrentPosition() > 0)
 					power = -this.gamepad2.right_stick_y * 0.6;
 				break;
 			
@@ -125,6 +125,13 @@ public class MainGamepad extends LinearOpMode
 				else if (this.gamepad1.left_trigger != 0)
 					power = this.gamepad1.left_trigger;
 				break;
+			case 2:
+				
+				if (this.gamepad1.dpad_up)
+					power = -1;
+				else if (this.gamepad1.dpad_down)
+					power=1;
+				break;
 		}
 		return power;
 	}
@@ -146,6 +153,7 @@ public class MainGamepad extends LinearOpMode
 		dunkSlide = hardwareMap.dcMotor.get("dunkSlide");
 		linearServo = hardwareMap.crservo.get("linearServo");
 		intake = hardwareMap.crservo.get("intake");
+		grabExtend = hardwareMap.crservo.get("grabExtend");
 		leftDrive.setDirection(DcMotor.Direction.REVERSE);
 		rightDrive.setDirection(DcMotor.Direction.FORWARD);
 		leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -172,7 +180,7 @@ public class MainGamepad extends LinearOpMode
 			// Controls continuous servos
 			linearServo.setPower(conServo(0));
 			intake.setPower(conServo(1));
-			
+			grabExtend.setPower(conServo(2));
 			// Controls servos
 			
 			
