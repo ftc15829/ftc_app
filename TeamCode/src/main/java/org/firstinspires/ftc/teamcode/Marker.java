@@ -4,7 +4,6 @@ import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -21,7 +20,8 @@ public class Marker extends LinearOpMode
 	private DcMotor linearSlide;
 	private CRServo linearServo;
 	private GoldAlignDetector detector;
-	private int direction;
+	private int caseNum;
+	
 	private void drive(double power)
 	{
 		leftDrive.setPower(power);
@@ -86,6 +86,8 @@ public class Marker extends LinearOpMode
 		}
 		linearSlide.setPower(0);
 		linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+		telemetry.addData("Sub Status", "End Lowering");
+		telemetry.update();
 	}
 	
 	private void turn(double turnUnit, double power)
@@ -113,45 +115,75 @@ public class Marker extends LinearOpMode
 	
 	private void alignGold()
 	{
+		telemetry.addData("Error Code", "Aligning");
+		telemetry.update();
 		if (!detector.isFound())
 		{
-			turn(-0.3, 0.2);
+			telemetry.addData("Error Code", "Just in case 1");
+			telemetry.update();
+			sleep(2000);
+			
+			turn(-0.25, 0.2);
 			if (!detector.isFound())
 			{
-				turn(0.6, 0.2);
+				telemetry.addData("Error Code", "Just in case 2");
+				telemetry.update();
+				sleep(2000);
+				
+				turn(0.5, 0.2);
 				if (!detector.isFound())
 				{
+					telemetry.addData("Error Code", "Just in case 3");
+					telemetry.update();
+					sleep(2000);
 					end();
 				}
 			}
 		}
 		if (detector.getAligned())
-		{direction=1;}
+		{
+			telemetry.addData("Error Code", "not good");
+			telemetry.update();
+			sleep(2000);
+			caseNum = 1;
+		}
 		
-		else if (detector.getXPosition() < 150)
-		{direction=0;
-			while (detector.getXPosition() < 250)
+		else if (detector.getXPosition() < 310)
+		{
+			telemetry.addData("Error Code", "Sure I guess");
+			telemetry.update();
+			sleep(2000);
+			
+			caseNum = 0;
+			while (detector.getXPosition() < 310)
 			{
-				leftDrive.setPower(-0.2);
-				rightDrive.setPower(0.2);
+				leftDrive.setPower(-0.4);
+				rightDrive.setPower(0.4);
 			}
 			leftDrive.setPower(0);
 			rightDrive.setPower(0);
 		}
-		else if (detector.getXPosition() > 350)
-		{direction=2;
-			while (detector.getXPosition() > 450)
+		else if (detector.getXPosition() > 460)
+		{
+			caseNum = 2;
+			while (detector.getXPosition() > 460)
 			{
-				leftDrive.setPower(0.2);
-				rightDrive.setPower(-0.2);
+				leftDrive.setPower(0.4);
+				rightDrive.setPower(-0.4);
 				
 			}
 			leftDrive.setPower(0);
 			rightDrive.setPower(0);
 		}
 		else
-			direction=1;
+		{
+			telemetry.addData("Error Code", "Yup, no good indeed");
+			telemetry.update();
+			sleep(2000);
+			caseNum = 1;
+		}
 	}
+	
 	private void end()
 	{
 		detector.disable();
@@ -167,25 +199,34 @@ public class Marker extends LinearOpMode
 			
 			lower();
 			alignGold();
-			driveDistance(1.5, 0.7);
-			switch (direction)
+			sleep(2000);
+//			driveDistance(1.5, 0.7);
+			switch (this.caseNum)
 			{
-//				case 0:
-//				{
-//					break;
-//				}
-				case 1:
+				case 0:
 				{
-					driveDistance(2.2,0.5);
+					telemetry.addData("case 0", "true");
+					telemetry.update();
+					sleep(2000);
 					break;
 				}
-//				case 2:
-//				{
-//					break;
-//				}
+				case 1:
+				{
+					telemetry.addData("case 1", "true");
+					telemetry.update();
+					sleep(2000);
+//					driveDistance(2.2,0.5);
+					break;
+				}
+				case 2:
+				{
+					telemetry.addData("case 2", "true");
+					telemetry.update();
+					sleep(2000);
+					break;
+				}
 			}
 			end();
-//			break;
 		}
 		end();
 	}
@@ -212,8 +253,8 @@ public class Marker extends LinearOpMode
 		detector = new GoldAlignDetector(); // Create detector
 		detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
 		detector.useDefaults(); // Set detector to use default settings
-		detector.alignSize = 200; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
-		detector.alignPosOffset = 0; // How far from center frame to offset this alignment zone.
+		detector.alignSize = 150; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
+		detector.alignPosOffset = 100; // How far from center frame to offset this alignment zone.
 		detector.downscale = 0.4; // How much to downscale the input frames
 		detector.areaScoringMethod = DogeCV.AreaScoringMethod.PERFECT_AREA; // Can also be PERFECT_AREA
 		detector.perfectAreaScorer.perfectArea = 10000;
