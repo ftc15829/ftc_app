@@ -17,6 +17,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.jetbrains.annotations.Contract;
 
+import static java.lang.Math.abs;
+
 //@Disabled
 @TeleOp(name = "Main Gamepad")
 
@@ -65,8 +67,10 @@ public class MainGamepad extends LinearOpMode
 				break;
 			
 			case 3: // intakeArm
-			//	if (intakeArm.getCurrentPosition() < (int) (0.91 * 1440) && intakeArm.getCurrentPosition() > 0)
-					power = -this.gamepad2.right_stick_y * 0.6;
+				power = -this.gamepad2.right_stick_y * 0.6;
+				if (intakeArm.getCurrentPosition() > -100 && power > 0)
+					power = 0;
+				
 				break;
 			
 			case 4: // dunkArm
@@ -120,10 +124,10 @@ public class MainGamepad extends LinearOpMode
 				break;
 			case 1: // intake
 				
-				if (this.gamepad1.right_trigger != 0)
-					power = -this.gamepad1.right_trigger;
-				else if (this.gamepad1.left_trigger != 0)
-					power = this.gamepad1.left_trigger;
+				if (this.gamepad1.left_trigger != 0)
+					power = -this.gamepad1.left_trigger;
+				else if (this.gamepad1.right_trigger != 0)
+					power = this.gamepad1.right_trigger;
 				break;
 			case 2:
 				
@@ -185,6 +189,16 @@ public class MainGamepad extends LinearOpMode
 			
 			
 			// Reset Encoders
+			if (this.gamepad1.x) {
+				linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+				intakeArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+				dunkArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+				dunkSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+				linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+				intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+				dunkArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+				dunkSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+			}
 			
 			// Updates telemetry to show power levels
 			telemetry.addData("Motors", "left (%.2f), right (%.2f)", drivePower(0), drivePower(1));

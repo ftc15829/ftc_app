@@ -18,6 +18,7 @@ public class Marker extends LinearOpMode
 	private DcMotor leftDrive;
 	private DcMotor rightDrive;
 	private DcMotor linearSlide;
+	private DcMotor intakeArm;
 	private CRServo linearServo;
 	private GoldAlignDetector detector;
 	private int caseNum;
@@ -57,34 +58,90 @@ public class Marker extends LinearOpMode
 		drive(0);
 	}
 	
+	private void dropMarker() {
+		telemetry.addData("Sub Status", "Dropping Marker");
+		telemetry.update();
+		
+		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		
+		intakeArm.setTargetPosition(-1200);
+		
+		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		
+		intakeArm.setPower(0.5);
+		
+		while (intakeArm.isBusy()) {
+		
+		}
+		
+		intakeArm.setPower(0);
+		
+		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		
+		intakeArm.setTargetPosition(-60);
+		
+		intakeArm.setPower(-0.5);
+		
+		while (intakeArm.isBusy()) {
+		
+		}
+		
+		intakeArm.setPower(0);
+		
+		telemetry.addData("Sub Status", "done?");
+		telemetry.update();
+		sleep(1000);
+	}
+	
 	private void lower()
 	{
 		telemetry.addData("Sub Status", "Lowering");
 		telemetry.update();
 		
-		linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		
 		linearSlide.setTargetPosition(7200);
+		
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		
 		linearSlide.setPower(0.5);
+		
 		while (linearSlide.isBusy())
 		{
 		
 		}
-		linearSlide.setPower(0);
-		linearServo.setPower(.25);
-		sleep(500);
 		
+		
+		linearSlide.setPower(0);
+		linearServo.setPower(0.25);
+		sleep(500);
 		driveDistance(1, 0.3);
+		linearServo.setPower(-0.3);
+		sleep(500);
 		linearServo.setPower(0);
 //		linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		linearSlide.setTargetPosition(0);
+		leftDrive.setTargetPosition(1440);
+		rightDrive.setTargetPosition(1440);
+		
+		leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		
 		linearSlide.setPower(0.5);
+		leftDrive.setPower(0.3);
+		rightDrive.setPower(0.3);
+		
 		while (linearSlide.isBusy())
 		{
 		
 		}
+		stopDriving();
 		linearSlide.setPower(0);
+		
+		leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+		rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		telemetry.addData("Sub Status", "End Lowering");
 		telemetry.update();
@@ -124,6 +181,8 @@ public class Marker extends LinearOpMode
 			sleep(2000);
 			
 			turn(-0.25, 0.2);
+			if (detector.isFound())
+				caseNum = 0;
 			if (!detector.isFound())
 			{
 				telemetry.addData("Error Code", "Just in case 2");
@@ -131,31 +190,33 @@ public class Marker extends LinearOpMode
 				sleep(2000);
 				
 				turn(0.5, 0.2);
+				if (detector.isFound())
+					caseNum = 2;
 				if (!detector.isFound())
 				{
-					telemetry.addData("Error Code", "Just in case 3");
+					telemetry.addData("Error Code", "Gold Not Found!");
 					telemetry.update();
 					sleep(2000);
 					end();
 				}
 			}
 		}
+		else if (detector.isFound())
+		{
+			caseNum = 1;
+		}
+		
 		if (detector.getAligned())
 		{
 			telemetry.addData("Error Code", "not good");
 			telemetry.update();
 			sleep(2000);
-			caseNum = 1;
+			return;
 		}
 		
-		else if (detector.getXPosition() < 310)
+		if (detector.getXPosition() < ((270 + detector.alignPosOffset) - (detector.alignSize / 2)))
 		{
-			telemetry.addData("Error Code", "Sure I guess");
-			telemetry.update();
-			sleep(2000);
-			
-			caseNum = 0;
-			while (detector.getXPosition() < 310)
+			while (detector.getXPosition() < ((270 + detector.alignPosOffset) - (detector.alignSize / 2)))
 			{
 				leftDrive.setPower(-0.4);
 				rightDrive.setPower(0.4);
@@ -163,10 +224,9 @@ public class Marker extends LinearOpMode
 			leftDrive.setPower(0);
 			rightDrive.setPower(0);
 		}
-		else if (detector.getXPosition() > 460)
+		else if (detector.getXPosition() > ((270 + detector.alignPosOffset) + (detector.alignSize / 2)))
 		{
-			caseNum = 2;
-			while (detector.getXPosition() > 460)
+			while (detector.getXPosition() > ((270 + detector.alignPosOffset) + (detector.alignSize / 2)))
 			{
 				leftDrive.setPower(0.4);
 				rightDrive.setPower(-0.4);
@@ -180,7 +240,6 @@ public class Marker extends LinearOpMode
 			telemetry.addData("Error Code", "Yup, no good indeed");
 			telemetry.update();
 			sleep(2000);
-			caseNum = 1;
 		}
 	}
 	
@@ -196,18 +255,21 @@ public class Marker extends LinearOpMode
 		telemetry.update();
 		while (!isStopRequested())
 		{
-			
 			lower();
 			alignGold();
-			sleep(2000);
-//			driveDistance(1.5, 0.7);
-			switch (this.caseNum)
+			caseNum = 0;
+			switch (caseNum)
 			{
 				case 0:
 				{
 					telemetry.addData("case 0", "true");
 					telemetry.update();
 					sleep(2000);
+					driveDistance(2.2,0.5);
+					turn(1.25,0.5);
+					driveDistance(1.4,0.5);
+					dropMarker();
+					driveDistance(-6.5,-0.5);
 					break;
 				}
 				case 1:
@@ -215,7 +277,7 @@ public class Marker extends LinearOpMode
 					telemetry.addData("case 1", "true");
 					telemetry.update();
 					sleep(2000);
-//					driveDistance(2.2,0.5);
+					driveDistance(2.2,0.5);
 					break;
 				}
 				case 2:
@@ -223,6 +285,7 @@ public class Marker extends LinearOpMode
 					telemetry.addData("case 2", "true");
 					telemetry.update();
 					sleep(2000);
+					driveDistance(2.2,0.5);
 					break;
 				}
 			}
@@ -244,17 +307,21 @@ public class Marker extends LinearOpMode
 		rightDrive = hardwareMap.dcMotor.get("rightDrive");
 		linearSlide = hardwareMap.dcMotor.get("linearSlide");
 		linearServo = hardwareMap.crservo.get("linearServo");
+		intakeArm = hardwareMap.dcMotor.get("intakeArm");
+		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		leftDrive.setDirection(DcMotor.Direction.FORWARD);
 		rightDrive.setDirection(DcMotor.Direction.REVERSE);
-		
+
+//		|0                     *170 |200 |270 |350  |640    Vertical: Left: (Constant+Offset)-(Size/2)  Right: (Constant+Offset)+(Size/2)
+//															Horizontal: 245 Vertical: 270
 		
 		detector = new GoldAlignDetector(); // Create detector
 		detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
 		detector.useDefaults(); // Set detector to use default settings
-		detector.alignSize = 150; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
-		detector.alignPosOffset = 100; // How far from center frame to offset this alignment zone.
+		detector.alignSize = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
+		detector.alignPosOffset = 250; // How far from center frame to offset this alignment zone.
 		detector.downscale = 0.4; // How much to downscale the input frames
 		detector.areaScoringMethod = DogeCV.AreaScoringMethod.PERFECT_AREA; // Can also be PERFECT_AREA
 		detector.perfectAreaScorer.perfectArea = 10000;
@@ -262,6 +329,15 @@ public class Marker extends LinearOpMode
 		detector.ratioScorer.weight = 5;
 		detector.ratioScorer.perfectRatio = 1.0; // Ratio adjustment
 		detector.enable(); // Start the detector!
+		
+		linearSlide.setTargetPosition(0);
+		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		linearSlide.setPower(0.5);
+		while (linearSlide.isBusy())
+		{
+		
+		}
+		linearSlide.setPower(0);
 		
 		waitForStart();
 		
