@@ -101,7 +101,7 @@ public class Marker extends LinearOpMode
 		leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		
-		linearSlide.setTargetPosition(7200);
+		linearSlide.setTargetPosition(7600);
 		
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
@@ -114,11 +114,12 @@ public class Marker extends LinearOpMode
 		
 		
 		linearSlide.setPower(0);
-		linearServo.setPower(0.25);
-		sleep(500);
+		linearServo.setPower(0.5);
+		sleep(200);
 		driveDistance(1, 0.3);
-		linearServo.setPower(-0.3);
-		sleep(500);
+//		sleep(300);
+		linearServo.setPower(-0.5);
+		sleep(800);
 		linearServo.setPower(0);
 //		linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		linearSlide.setTargetPosition(0);
@@ -178,7 +179,6 @@ public class Marker extends LinearOpMode
 		{
 			telemetry.addData("Error Code", "Just in case 1");
 			telemetry.update();
-			sleep(2000);
 			
 			turn(-0.25, 0.2);
 			if (detector.isFound())
@@ -187,7 +187,6 @@ public class Marker extends LinearOpMode
 			{
 				telemetry.addData("Error Code", "Just in case 2");
 				telemetry.update();
-				sleep(2000);
 				
 				turn(0.5, 0.2);
 				if (detector.isFound())
@@ -196,27 +195,25 @@ public class Marker extends LinearOpMode
 				{
 					telemetry.addData("Error Code", "Gold Not Found!");
 					telemetry.update();
-					sleep(2000);
 					end();
 				}
 			}
 		}
 		else if (detector.isFound())
 		{
-			caseNum = 1;
+		
 		}
 		
 		if (detector.getAligned())
 		{
 			telemetry.addData("Error Code", "not good");
 			telemetry.update();
-			sleep(2000);
 			return;
 		}
 		
-		if (detector.getXPosition() < ((270 + detector.alignPosOffset) - (detector.alignSize / 2)))
+		if (detector.getXPosition() < ((320 + detector.alignPosOffset) - (detector.alignSize / 2)))
 		{
-			while (detector.getXPosition() < ((270 + detector.alignPosOffset) - (detector.alignSize / 2)))
+			while (detector.getXPosition() < ((320 + detector.alignPosOffset) - (detector.alignSize / 2)))
 			{
 				leftDrive.setPower(-0.4);
 				rightDrive.setPower(0.4);
@@ -224,9 +221,9 @@ public class Marker extends LinearOpMode
 			leftDrive.setPower(0);
 			rightDrive.setPower(0);
 		}
-		else if (detector.getXPosition() > ((270 + detector.alignPosOffset) + (detector.alignSize / 2)))
+		else if (detector.getXPosition() > ((320 + detector.alignPosOffset) + (detector.alignSize / 2)))
 		{
-			while (detector.getXPosition() > ((270 + detector.alignPosOffset) + (detector.alignSize / 2)))
+			while (detector.getXPosition() > ((320 + detector.alignPosOffset) + (detector.alignSize / 2)))
 			{
 				leftDrive.setPower(0.4);
 				rightDrive.setPower(-0.4);
@@ -239,7 +236,6 @@ public class Marker extends LinearOpMode
 		{
 			telemetry.addData("Error Code", "Yup, no good indeed");
 			telemetry.update();
-			sleep(2000);
 		}
 	}
 	
@@ -264,10 +260,9 @@ public class Marker extends LinearOpMode
 				{
 					telemetry.addData("case 0", "true");
 					telemetry.update();
-					sleep(2000);
-					driveDistance(2.2,0.5);
-					turn(1.25,0.5);
-					driveDistance(1.4,0.5);
+					driveDistance(3.0,0.5);
+					turn(1.3,0.5);
+					driveDistance(1.9,0.5);
 					dropMarker();
 					driveDistance(-6.5,-0.5);
 					break;
@@ -276,7 +271,6 @@ public class Marker extends LinearOpMode
 				{
 					telemetry.addData("case 1", "true");
 					telemetry.update();
-					sleep(2000);
 					driveDistance(2.2,0.5);
 					break;
 				}
@@ -284,7 +278,6 @@ public class Marker extends LinearOpMode
 				{
 					telemetry.addData("case 2", "true");
 					telemetry.update();
-					sleep(2000);
 					driveDistance(2.2,0.5);
 					break;
 				}
@@ -314,8 +307,8 @@ public class Marker extends LinearOpMode
 		leftDrive.setDirection(DcMotor.Direction.FORWARD);
 		rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
-//		|0                     *170 |200 |270 |350  |640    Vertical: Left: (Constant+Offset)-(Size/2)  Right: (Constant+Offset)+(Size/2)
-//															Horizontal: 245 Vertical: 270
+//		|0                     *320 |200 |270 |350  |640    Vertical: Left: (Constant+Offset)-(Size/2)  Right: (Constant+Offset)+(Size/2)
+//
 		
 		detector = new GoldAlignDetector(); // Create detector
 		detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
