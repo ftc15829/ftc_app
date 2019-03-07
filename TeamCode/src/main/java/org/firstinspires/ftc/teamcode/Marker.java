@@ -22,14 +22,6 @@ public class Marker extends OpMode {
 	private GoldAlignDetector detector;
 	private int caseNum;
 	
-	private void sleep(long milliseconds) {
-		try {
-			Thread.sleep(milliseconds);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
-	}
-	
 	private void drive(double power) {
 		leftDrive.setPower(power);
 		rightDrive.setPower(power);
@@ -75,6 +67,7 @@ public class Marker extends OpMode {
 	
 	private void dropMarker() {
 		telemetry.addData("Status", "Dropping Marker");
+		telemetry.update();
 		
 		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		
@@ -96,13 +89,14 @@ public class Marker extends OpMode {
 	}
 	
 	private void lower() {
-		telemetry.addData("Sub Status", "Lowering");
+		telemetry.addData("Status", "Lowering");
+		telemetry.update();
 		
 		leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		
 		// Linear Slide Up
-		linearSlide.setTargetPosition(7600);
+		linearSlide.setTargetPosition(7900);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
 		linearSlide.setPower(0.5);
@@ -111,10 +105,10 @@ public class Marker extends OpMode {
 		
 		// Servo
 		linearServo.setPower(0.5);
-		sleep(200);
+//		sleep(200);
 		driveDistance(1, 0.3);
 		linearServo.setPower(-0.5);
-		sleep(800);
+//		sleep(800);
 		linearServo.setPower(0);
 		
 		// Linear Slide Down
@@ -141,21 +135,15 @@ public class Marker extends OpMode {
 		telemetry.addData("Status", "Aligning");
 		
 		if (!detector.isFound()) {
-			turn(-0.25, 0.4);
+			turn(-0.3, 0.4);
 			if (detector.isFound())
 				caseNum = 0;
 		}
 		
 		if (!detector.isFound()) {
-			turn(0.25, 0.4);
+			turn(0.6, 0.4);
 			if (detector.isFound())
 				caseNum = 1;
-		}
-		
-		if (!detector.isFound()) {
-			turn(0.25, 0.4);
-			if (detector.isFound())
-				caseNum = 2;
 		}
 		
 		while (detector.getXPosition() < ((320 + detector.alignPosOffset) - (detector.alignSize / 2))) {
@@ -170,46 +158,6 @@ public class Marker extends OpMode {
 		
 		leftDrive.setPower(0);
 		rightDrive.setPower(0);
-	}
-	
-	@Override
-	public void start() {
-		telemetry.addData("Status", "Running");
-		
-		lower();
-		alignGold();
-		caseNum = 0;
-		switch (caseNum) {
-			case 0: {
-				telemetry.addData("case 0", "true");
-				
-				driveDistance(3.0, 0.5);
-				turn(1.3, 0.5);
-				driveDistance(1.9, 0.5);
-				dropMarker();
-				
-				break;
-			}
-			case 1: {
-				telemetry.addData("case 1", "true");
-				
-				driveDistance(4.9, 0.5);
-				dropMarker();
-				
-				break;
-			}
-			case 2: {
-				telemetry.addData("case 2", "true");
-				
-				driveDistance(3.0, 0.5);
-				turn(-1.3, 0.5);
-				driveDistance(1.9, 0.5);
-				dropMarker();
-				
-				break;
-			}
-		}
-		stop();
 	}
 	
 	@Override
@@ -257,10 +205,57 @@ public class Marker extends OpMode {
 	}
 	
 	@Override
-	public void loop() {
-		telemetry.addData("IsAligned", detector.getAligned());
-		telemetry.addData("X Pos", detector.getXPosition());
+	public void start() {
+		telemetry.addData("Status", "Running");
 		telemetry.update();
+
+		lower();
+//		alignGold();
+//		switch (caseNum) {
+//			case 0:
+//			{
+//				telemetry.addData("case 0", "true");
+//
+//				driveDistance(3.0,0.5);
+//				turn(1.5,0.5);
+//				driveDistance(1.9,0.5);
+//				dropMarker();
+//				driveDistance(-6.5,-0.5);
+//
+//				break;
+//			}
+//			case 1:
+//			{
+//				telemetry.addData("case 1", "true");
+//
+//				driveDistance(3.5,0.5);
+//				dropMarker();
+//				turn(-1.7,0.5);
+//				driveDistance(7.0,.75);
+//
+//				break;
+//			}
+//			case 2:
+//			{
+//				telemetry.addData("case 2", "true");
+//
+//				driveDistance(2.7,0.5);
+//				turn(-1.2,.25);
+//				driveDistance(1.7,.25);
+//				dropMarker();
+//				driveDistance(-10,.5);
+//
+//				break;
+//			}
+//		}
+//		stop();
+	}
+	
+	@Override
+	public void loop() {
+//		telemetry.addData("IsAligned", detector.getAligned());
+//		telemetry.addData("X Pos", detector.getXPosition());
+//		telemetry.update();
 	}
 	
 	@Override
