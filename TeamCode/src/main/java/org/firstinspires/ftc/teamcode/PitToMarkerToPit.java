@@ -58,6 +58,9 @@ public class PitToMarkerToPit extends LinearOpMode {
 		leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 	}
+	private void driveDistance(double revolutions) {
+		driveDistance(revolutions, 1);
+	}
 	
 	private void turn(double turnUnit, double power) {
 		leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -74,6 +77,9 @@ public class PitToMarkerToPit extends LinearOpMode {
 		
 		leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+	}
+	private void turn(double turnUnit) {
+		turn(turnUnit, 1);
 	}
 	
 	private void dropMarker() {
@@ -112,7 +118,7 @@ public class PitToMarkerToPit extends LinearOpMode {
 		// Linear Slide Up
 		SubStatus.setValue("Lowering Robot");
 		telemetry.update();
-		linearSlide.setTargetPosition(7900);
+		linearSlide.setTargetPosition(9600);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
 		linearSlide.setPower(0.5);
@@ -122,11 +128,8 @@ public class PitToMarkerToPit extends LinearOpMode {
 		// Servo
 		SubStatus.setValue("Driving Forward");
 		telemetry.update();
-		linearServo.setPower(0.5);
-		sleep(200);
+		linearServo.setPower(1.0);
 		driveDistance(1, 0.3);
-		linearServo.setPower(-0.5);
-		sleep(800);
 		linearServo.setPower(0);
 		
 		// Linear Slide Down
@@ -165,27 +168,27 @@ public class PitToMarkerToPit extends LinearOpMode {
 		}
 		
 		if (!detector.isFound()) {
-			turn(-0.4, 0.4);
+			turn(-0.5, 0.4);
 			if (detector.isFound())
 				caseNum = 0;
 		}
 		
 		if (!detector.isFound()) {
-			turn(0.8, 0.4);
+			turn(1, 0.4);
 			caseNum = 2;
 		}
 		
 		SubStatus.setValue("Fine-Tuning");
 		telemetry.update();
 		
-		while (detector.getXPosition() < ((320 + detector.alignPosOffset) - (detector.alignSize / 2))) {
-			leftDrive.setPower(-0.4);
-			rightDrive.setPower(0.4);
+		while (detector.getXPosition() < 160) {
+			leftDrive.setPower(-0.5);
+			rightDrive.setPower(0.5);
 		}
 		
-		while (detector.getXPosition() > ((320 + detector.alignPosOffset) + (detector.alignSize / 2))) {
-			leftDrive.setPower(0.4);
-			rightDrive.setPower(-0.4);
+		while (detector.getXPosition() > 480) {
+			leftDrive.setPower(0.5);
+			rightDrive.setPower(-0.5);
 		}
 		
 		leftDrive.setPower(0);
@@ -206,40 +209,43 @@ public class PitToMarkerToPit extends LinearOpMode {
 			case 0: {
 				Case.setValue("Left");
 				telemetry.update();
-				
-				driveDistance(2.0, 0.5);
-				turn(-1.3, 0.5);
-				driveDistance(5, 0.5);
+
+				driveDistance(1.6);
+				driveDistance(-0.5);
+				turn(-0.8);
+				driveDistance(3.3);
+				turn(-0.5);
+				driveDistance(2.0);
 				dropMarker();
-				driveDistance(-6.5, -0.5);
+				driveDistance(-5.3);
 				break;
 			}
 			case 1: {
 				Case.setValue("Middle");
 				telemetry.update();
-				
-				driveDistance(2.2, 0.5);
-				driveDistance(0.4, .75);
-				turn(-1.3, 0.75);
-				driveDistance(3.5, .75);
-				turn(1, .75);
-				driveDistance(3, .75);
+
+				driveDistance(1.1);
+				driveDistance(-0.5);
+				turn(-1.35);
+				driveDistance(4.5);
+				turn(-0.55);
+				driveDistance(1.4);
 				dropMarker();
-				driveDistance(-6, 0.75);
+				driveDistance(-5.3);
 				break;
 			}
 			case 2: {
 				Case.setValue("Right");
 				telemetry.update();
-				
-				driveDistance(2.2, 0.5);
-				driveDistance(-2.2, .75);
-				turn(-2, .75);
-				driveDistance(3.5, .75);
-				turn(-.6, .75);
-				driveDistance(3.75, .75);
+
+				driveDistance(1.6);
+				driveDistance(-0.8);
+				turn(-1.7);
+				driveDistance(4.3);
+				turn(-0.55);
+				driveDistance(2.0);
 				dropMarker();
-				driveDistance(-6, .75);
+				driveDistance(-5.0);
 				break;
 			}
 		}
@@ -250,6 +256,7 @@ public class PitToMarkerToPit extends LinearOpMode {
 	public void runOpMode() {
 		// Updates telemetry (log) to show it is running
 		telemetry.setAutoClear(false);
+		Status = telemetry.addData("Status", "Initialized");
 		telemetry.update();
 		
 		// Initializes hardware

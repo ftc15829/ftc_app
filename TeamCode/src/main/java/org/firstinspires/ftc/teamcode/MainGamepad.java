@@ -35,10 +35,12 @@ public class MainGamepad extends LinearOpMode
 	private DcMotor intake;
 	private CRServo linearServo;
 	private CRServo grabExtend;
-	
+	private boolean spin;
+	private boolean spinBack;
 	// Sets the power of the various motors
 	private double drivePower(int id)
 	{
+		
 		double power = 0.0; // Initializes power level with a default value of 0
 		double driveMod = 1; // Modifier for left and right drive's speed control
 		final double CORRECTION = 1.0; // Adjusts leftDrives power to account for unwanted steering
@@ -83,10 +85,38 @@ public class MainGamepad extends LinearOpMode
 					power = 1;
 				break;
 			case 6: // intake
-				if (this.gamepad1.left_trigger != 0)
-					power = this.gamepad1.left_trigger;
-				else if (this.gamepad1.right_trigger != 0)
+//				if (this.gamepad1.right_trigger != 0 && !spin)
+//				{
+//					spin = true;
+//					spinBack = false;
+//				}
+//				else if (this.gamepad1.left_trigger != 0 && !spinBack)
+//				{
+//					spinBack = true;
+//					spin = false;
+//				}
+//
+//				else if (spin && this.gamepad1.right_trigger != 0)
+//				{
+//					spin = false;
+//					spinBack = false;
+//				}
+//
+//				else if (spinBack && this.gamepad1.left_trigger != 0)
+//				{
+//					spinBack = false;
+//					spin = false;
+//				}
+//
+//
+//				if (spin)
+//					power = -1;
+//				else if (spinBack)
+//					power = 1;
+				if (this.gamepad1.right_trigger != 0)
 					power = -this.gamepad1.right_trigger;
+				else if (this.gamepad1.left_trigger != 0)
+					power = this.gamepad1.left_trigger;
 				break;
 		}
 		return power;

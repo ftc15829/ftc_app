@@ -12,6 +12,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Test extends LinearOpMode
 {
+	public Telemetry.Item Status;
+	public Telemetry.Item SubStatus;
+	public Telemetry.Item Case = telemetry.addData("Case", "");
 	/*
 telemetry.setAutoClear(false);
        Telemetry.Item countItem = telemetry.addData("count", 0);
@@ -34,12 +37,10 @@ telemetry.setAutoClear(false);
 	public void runOpMode()
 	{
 		telemetry.setAutoClear(false);
-		Telemetry.Item Status = telemetry.addData("Status", "Normal");
-		Telemetry.Item SubStatus = telemetry.addData("Sub-Status", "");
-		Telemetry.Item Case = telemetry.addData("Case", "");
 		
-		Status.setValue("Initializing");
-		SubStatus.setValue("Test1");
+		
+		Status = telemetry.addData("Status", "Normal");
+		SubStatus = telemetry.addData("Sub-Status", "");
 		telemetry.update();
 		
 		sleep(2000);
