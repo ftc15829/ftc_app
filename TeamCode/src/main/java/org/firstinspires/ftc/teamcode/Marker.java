@@ -8,6 +8,10 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import static android.os.SystemClock.sleep;
+
 //@Disabled
 @Autonomous(name = "Marker")
 
@@ -21,6 +25,19 @@ public class Marker extends OpMode {
 	private CRServo linearServo;
 	private GoldAlignDetector detector;
 	private int caseNum;
+	
+	private Telemetry.Item Status = telemetry.addData("Status", "Initialized");
+	private Telemetry.Item SubStatus = telemetry.addData("Sub-Status", "");
+	private Telemetry.Item Case = telemetry.addData("Case", "");
+	
+	private void end() {
+		detector.disable();
+		stop();
+	}
+	
+	private void stopDriving() {
+		drive(0);
+	}
 	
 	private void drive(double power) {
 		leftDrive.setPower(power);
@@ -61,17 +78,12 @@ public class Marker extends OpMode {
 		rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 	}
 	
-	private void stopDriving() {
-		drive(0);
-	}
-	
 	private void dropMarker() {
-		telemetry.addData("Status", "Dropping Marker");
-		telemetry.update();
-		
-		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		Status.setValue("Dropping Marker");
 		
 		// Intake Arm Down
+		SubStatus.setValue("Lowering Arm");
+		telemetry.update();
 		intakeArm.setTargetPosition(-1200);
 		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
@@ -80,22 +92,28 @@ public class Marker extends OpMode {
 		intakeArm.setPower(0);
 		
 		// Intake Arm Up
+		SubStatus.setValue("Raising Arm");
+		telemetry.update();
 		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		intakeArm.setTargetPosition(-60);
 		
 		intakeArm.setPower(-0.5);
 		while (intakeArm.isBusy()) { /*wait*/ }
 		intakeArm.setPower(0);
+		
+		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		
+		Status.setValue("Running");
+		SubStatus.setValue("");
+		telemetry.update();
 	}
 	
 	private void lower() {
-		telemetry.addData("Status", "Lowering");
-		telemetry.update();
-		
-		leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		Status.setValue("Lowering");
 		
 		// Linear Slide Up
+		SubStatus.setValue("Lowering Robot");
+		telemetry.update();
 		linearSlide.setTargetPosition(7900);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
@@ -104,14 +122,18 @@ public class Marker extends OpMode {
 		linearSlide.setPower(0);
 		
 		// Servo
+		SubStatus.setValue("Driving Forward");
+		telemetry.update();
 		linearServo.setPower(0.5);
-//		sleep(200);
+		sleep(200);
 		driveDistance(1, 0.3);
 		linearServo.setPower(-0.5);
-//		sleep(800);
+		sleep(800);
 		linearServo.setPower(0);
 		
 		// Linear Slide Down
+		SubStatus.setValue("Lowering Linear Slide");
+		telemetry.update();
 		linearSlide.setTargetPosition(0);
 		leftDrive.setTargetPosition(1440);
 		rightDrive.setTargetPosition(1440);
@@ -119,32 +141,44 @@ public class Marker extends OpMode {
 		rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
-		linearSlide.setPower(0.5);
+		linearSlide.setPower(1);
 		leftDrive.setPower(0.3);
 		rightDrive.setPower(0.3);
 		while (linearSlide.isBusy()) { /*wait*/ }
 		linearSlide.setPower(0);
 		stopDriving();
 		
-		leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-		rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-		linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+		leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		
+		Status.setValue("Running");
+		SubStatus.setValue("");
+		telemetry.update();
 	}
 	
 	private void alignGold() {
-		telemetry.addData("Status", "Aligning");
+		Status.setValue("Aligning");
+		SubStatus.setValue("Finding Gold");
+		telemetry.update();
+		
+		if (detector.isFound()) {
+			caseNum = 1;
+		}
 		
 		if (!detector.isFound()) {
-			turn(-0.3, 0.4);
+			turn(-0.4, 0.4);
 			if (detector.isFound())
 				caseNum = 0;
 		}
 		
 		if (!detector.isFound()) {
-			turn(0.6, 0.4);
-			if (detector.isFound())
-				caseNum = 1;
+			turn(0.8, 0.4);
+			caseNum = 2;
 		}
+		
+		SubStatus.setValue("Fine-Tuning");
+		telemetry.update();
 		
 		while (detector.getXPosition() < ((320 + detector.alignPosOffset) - (detector.alignSize / 2))) {
 			leftDrive.setPower(-0.4);
@@ -158,12 +192,16 @@ public class Marker extends OpMode {
 		
 		leftDrive.setPower(0);
 		rightDrive.setPower(0);
+		
+		Status.setValue("Running");
+		SubStatus.setValue("");
+		telemetry.update();
 	}
 	
 	@Override
 	public void init() {
 		// Updates telemetry (log) to show it is running
-		telemetry.addData("Status", "Initializing");
+		telemetry.setAutoClear(false);
 		telemetry.update();
 		
 		// Initializes hardware
@@ -172,7 +210,6 @@ public class Marker extends OpMode {
 		linearSlide = hardwareMap.dcMotor.get("linearSlide");
 		linearServo = hardwareMap.crservo.get("linearServo");
 		intakeArm = hardwareMap.dcMotor.get("intakeArm");
-		
 		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -182,8 +219,8 @@ public class Marker extends OpMode {
 		detector = new GoldAlignDetector(); // Create detector
 		detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
 		detector.useDefaults(); // Set detector to use default settings
-		detector.alignSize = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
-		detector.alignPosOffset = 250; // How far from center frame to offset this alignment zone.
+		detector.alignSize = 200; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
+		detector.alignPosOffset = 0; // How far from center frame to offset this alignment zone.
 		detector.downscale = 0.4; // How much to downscale the input frames
 		detector.areaScoringMethod = DogeCV.AreaScoringMethod.PERFECT_AREA; // Can also be PERFECT_AREA
 		detector.perfectAreaScorer.perfectArea = 10000;
@@ -197,6 +234,9 @@ public class Marker extends OpMode {
 		linearSlide.setPower(0.5);
 		while (linearSlide.isBusy()) { /*wait*/ }
 		linearSlide.setPower(0);
+		
+		SubStatus.setValue("Waiting...");
+		telemetry.update();
 	}
 	
 	@Override
@@ -206,49 +246,46 @@ public class Marker extends OpMode {
 	
 	@Override
 	public void start() {
-		telemetry.addData("Status", "Running");
+		Status.setValue("Running");
 		telemetry.update();
-
+		
 		lower();
-//		alignGold();
-//		switch (caseNum) {
-//			case 0:
-//			{
-//				telemetry.addData("case 0", "true");
-//
-//				driveDistance(3.0,0.5);
-//				turn(1.5,0.5);
-//				driveDistance(1.9,0.5);
-//				dropMarker();
-//				driveDistance(-6.5,-0.5);
-//
-//				break;
-//			}
-//			case 1:
-//			{
-//				telemetry.addData("case 1", "true");
-//
-//				driveDistance(3.5,0.5);
-//				dropMarker();
-//				turn(-1.7,0.5);
-//				driveDistance(7.0,.75);
-//
-//				break;
-//			}
-//			case 2:
-//			{
-//				telemetry.addData("case 2", "true");
-//
-//				driveDistance(2.7,0.5);
-//				turn(-1.2,.25);
-//				driveDistance(1.7,.25);
-//				dropMarker();
-//				driveDistance(-10,.5);
-//
-//				break;
-//			}
-//		}
-//		stop();
+		alignGold();
+		switch (caseNum) {
+			case 0: {
+				Case.setValue("Left");
+				telemetry.update();
+				
+				driveDistance(3.0, 0.5);
+				turn(1.5, 0.5);
+				driveDistance(1.9, 0.5);
+				dropMarker();
+				driveDistance(-6.5, -0.5);
+				break;
+			}
+			case 1: {
+				Case.setValue("Middle");
+				telemetry.update();
+				
+				driveDistance(3.5, 0.5);
+				dropMarker();
+				turn(-1.7, 0.5);
+				driveDistance(7.0, .75);
+				break;
+			}
+			case 2: {
+				Case.setValue("Right");
+				telemetry.update();
+				
+				driveDistance(2.7, 0.5);
+				turn(-1.2, .25);
+				driveDistance(1.7, .25);
+				dropMarker();
+				driveDistance(-10, .5);
+				break;
+			}
+		}
+		stop();
 	}
 	
 	@Override

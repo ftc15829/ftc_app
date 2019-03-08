@@ -8,11 +8,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 //@Disabled
 @Autonomous(name = "Pit")
 
-public class Pit extends LinearOpMode
-{
+public class Pit extends LinearOpMode {
 	
 	// Defines hardware
 	private DcMotor leftDrive;
@@ -23,14 +24,25 @@ public class Pit extends LinearOpMode
 	private GoldAlignDetector detector;
 	private int caseNum;
 	
-	private void drive(double power)
-	{
+	private Telemetry.Item Status = telemetry.addData("Status", "Initialized");
+	private Telemetry.Item SubStatus = telemetry.addData("Sub-Status", "");
+	private Telemetry.Item Case = telemetry.addData("Case", "");
+	
+	private void end() {
+		detector.disable();
+		stop();
+	}
+	
+	private void stopDriving() {
+		drive(0);
+	}
+	
+	private void drive(double power) {
 		leftDrive.setPower(power);
 		rightDrive.setPower(power);
 	}
 	
-	private void driveDistance(double revolutions, double power)
-	{
+	private void driveDistance(double revolutions, double power) {
 		leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		
@@ -47,78 +59,7 @@ public class Pit extends LinearOpMode
 		rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 	}
 	
-	private void stopDriving()
-	{
-		drive(0);
-	}
-	
-	private void dropMarker() {
-		telemetry.addData("Status", "Dropping Marker");
-		
-		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		
-		// Intake Arm Down
-		intakeArm.setTargetPosition(-1200);
-		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		
-		intakeArm.setPower(0.5);
-		while (intakeArm.isBusy()) { /*wait*/ }
-		intakeArm.setPower(0);
-		
-		// Intake Arm Up
-		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		intakeArm.setTargetPosition(-60);
-		
-		intakeArm.setPower(-0.5);
-		while (intakeArm.isBusy()) { /*wait*/ }
-		intakeArm.setPower(0);
-	}
-	
-	private void lower()
-	{
-		telemetry.addData("Sub Status", "Lowering");
-		
-		leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		
-		// Linear Slide Up
-		linearSlide.setTargetPosition(7900);
-		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		
-		linearSlide.setPower(0.5);
-		while (linearSlide.isBusy()) { /*wait*/ }
-		linearSlide.setPower(0);
-		
-		// Servo
-		linearServo.setPower(0.5);
-		sleep(200);
-		driveDistance(1, 0.3);
-		linearServo.setPower(-0.5);
-		sleep(800);
-		linearServo.setPower(0);
-		
-		// Linear Slide Down
-		linearSlide.setTargetPosition(0);
-		leftDrive.setTargetPosition(1440);
-		rightDrive.setTargetPosition(1440);
-		leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		
-		linearSlide.setPower(1);
-		leftDrive.setPower(0.3);
-		rightDrive.setPower(0.3);
-		while (linearSlide.isBusy()) { /*wait*/ }
-		linearSlide.setPower(0);
-		stopDriving();
-		
-		leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-		rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-		linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-	}
-	
-	private void turn(double turnUnit, double power)
-	{
+	private void turn(double turnUnit, double power) {
 		leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		
@@ -135,25 +76,107 @@ public class Pit extends LinearOpMode
 		rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 	}
 	
-	private void alignGold()
-	{
-		telemetry.addData("Status", "Aligning");
+	private void dropMarker() {
+		Status.setValue("Dropping Marker");
+		
+		// Intake Arm Down
+		SubStatus.setValue("Lowering Arm");
+		telemetry.update();
+		intakeArm.setTargetPosition(-1200);
+		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		
+		intakeArm.setPower(0.5);
+		while (intakeArm.isBusy()) { /*wait*/ }
+		intakeArm.setPower(0);
+		
+		// Intake Arm Up
+		SubStatus.setValue("Raising Arm");
+		telemetry.update();
+		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		intakeArm.setTargetPosition(-60);
+		
+		intakeArm.setPower(-0.5);
+		while (intakeArm.isBusy()) { /*wait*/ }
+		intakeArm.setPower(0);
+		
+		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		
+		Status.setValue("Running");
+		SubStatus.setValue("");
+		telemetry.update();
+	}
+	
+	private void lower() {
+		Status.setValue("Lowering");
+		
+		// Linear Slide Up
+		SubStatus.setValue("Lowering Robot");
+		telemetry.update();
+		linearSlide.setTargetPosition(7900);
+		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		
+		linearSlide.setPower(0.5);
+		while (linearSlide.isBusy()) { /*wait*/ }
+		linearSlide.setPower(0);
+		
+		// Servo
+		SubStatus.setValue("Driving Forward");
+		telemetry.update();
+		linearServo.setPower(0.5);
+		sleep(200);
+		driveDistance(1, 0.3);
+		linearServo.setPower(-0.5);
+		sleep(800);
+		linearServo.setPower(0);
+		
+		// Linear Slide Down
+		SubStatus.setValue("Lowering Linear Slide");
+		telemetry.update();
+		linearSlide.setTargetPosition(0);
+		leftDrive.setTargetPosition(1440);
+		rightDrive.setTargetPosition(1440);
+		leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		
+		linearSlide.setPower(1);
+		leftDrive.setPower(0.3);
+		rightDrive.setPower(0.3);
+		while (linearSlide.isBusy()) { /*wait*/ }
+		linearSlide.setPower(0);
+		stopDriving();
+		
+		leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		
+		Status.setValue("Running");
+		SubStatus.setValue("");
+		telemetry.update();
+	}
+	
+	private void alignGold() {
+		Status.setValue("Aligning");
+		SubStatus.setValue("Finding Gold");
+		telemetry.update();
 		
 		if (detector.isFound()) {
 			caseNum = 1;
 		}
 		
 		if (!detector.isFound()) {
-			turn(-0.3, 0.4);
+			turn(-0.4, 0.4);
 			if (detector.isFound())
 				caseNum = 0;
 		}
 		
 		if (!detector.isFound()) {
-			turn(0.6, 0.4);
-//			if (detector.isFound())
+			turn(0.8, 0.4);
 			caseNum = 2;
 		}
+		
+		SubStatus.setValue("Fine-Tuning");
+		telemetry.update();
 		
 		while (detector.getXPosition() < ((320 + detector.alignPosOffset) - (detector.alignSize / 2))) {
 			leftDrive.setPower(-0.4);
@@ -167,59 +190,48 @@ public class Pit extends LinearOpMode
 		
 		leftDrive.setPower(0);
 		rightDrive.setPower(0);
-	}
-	
-	private void end()
-	{
-		detector.disable();
-		stop();
-	}
-	
-	private void run()
-	{
-		telemetry.addData("Status", "Running");
+		
+		Status.setValue("Running");
+		SubStatus.setValue("");
 		telemetry.update();
-		while (!isStopRequested())
-		{
-			lower();
-			alignGold();
-			switch (caseNum)
-			{
-				case 0:
-				{
-					telemetry.addData("case 0", "true");
-					telemetry.update();
-					driveDistance(3,1);
-					break;
-				}
-				case 1:
-				{
-					telemetry.addData("case 1", "true");
-					telemetry.update();
-					driveDistance(2.8,1);
-					
-					break;
-				}
-				case 2:
-				{
-					telemetry.addData("case 2", "true");
-					telemetry.update();
-					driveDistance(3,0.5);
-					
-					break;
-				}
+	}
+	
+	private void run() {
+		Status.setValue("Running");
+		telemetry.update();
+		
+		lower();
+		alignGold();
+		switch (caseNum) {
+			case 0: {
+				Case.setValue("Left");
+				telemetry.update();
+				
+				driveDistance(3, 1);
+				break;
 			}
-			end();
+			case 1: {
+				Case.setValue("Middle");
+				telemetry.update();
+				
+				driveDistance(2.8, 1);
+				break;
+			}
+			case 2: {
+				Case.setValue("Right");
+				telemetry.update();
+				
+				driveDistance(3, 0.5);
+				break;
+			}
 		}
 		end();
 	}
 	
 	@Override
-	public void runOpMode()
-	{
-		
+	public void runOpMode() {
 		// Updates telemetry (log) to show it is running
-		telemetry.addData("Status", "Initialized");
+		telemetry.setAutoClear(false);
 		telemetry.update();
 		
 		// Initializes hardware
@@ -233,9 +245,6 @@ public class Pit extends LinearOpMode
 		rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		leftDrive.setDirection(DcMotor.Direction.FORWARD);
 		rightDrive.setDirection(DcMotor.Direction.REVERSE);
-
-//		|0                     *320 |200 |270 |350  |640    Vertical: Left: (Constant+Offset)-(Size/2)  Right: (Constant+Offset)+(Size/2)
-//
 		
 		detector = new GoldAlignDetector(); // Create detector
 		detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
@@ -253,11 +262,11 @@ public class Pit extends LinearOpMode
 		linearSlide.setTargetPosition(0);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		linearSlide.setPower(0.5);
-		while (linearSlide.isBusy())
-		{
-		
-		}
+		while (linearSlide.isBusy()) { /*wait*/ }
 		linearSlide.setPower(0);
+		
+		SubStatus.setValue("Waiting...");
+		telemetry.update();
 		
 		waitForStart();
 		
