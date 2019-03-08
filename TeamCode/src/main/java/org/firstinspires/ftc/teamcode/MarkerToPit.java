@@ -127,7 +127,7 @@ public class MarkerToPit extends LinearOpMode
 		telemetry.addData("Status", "Lowering");
 		telemetry.addData("Sub-Status", "Lowering Robot");
 		telemetry.update();
-		linearSlide.setTargetPosition(7900);
+		linearSlide.setTargetPosition(10300);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
 		linearSlide.setPower(0.5);
@@ -186,14 +186,14 @@ public class MarkerToPit extends LinearOpMode
 		
 		if (!detector.isFound())
 		{
-			turn(-0.3, 0.4);
+			turn(-0.4, 0.4);
 			if (detector.isFound())
 				caseNum = 0;
 		}
 		
 		if (!detector.isFound())
 		{
-			turn(0.7, 0.4);
+			turn(0.8, 0.4);
 			caseNum = 2;
 		}
 		
@@ -229,7 +229,7 @@ public class MarkerToPit extends LinearOpMode
 		alignGold();
 		switch (caseNum)
 		{
-			case 0:
+			case 0: // Gold is Left
 			{
 				telemetry.addData("Status", "Normal");
 				telemetry.addData("Case", "Left");
@@ -243,7 +243,7 @@ public class MarkerToPit extends LinearOpMode
 				
 				break;
 			}
-			case 1:
+			case 1: // Gold is Middle
 			{
 				telemetry.addData("Status", "Normal");
 				telemetry.addData("Case", "Middle");
@@ -261,7 +261,7 @@ public class MarkerToPit extends LinearOpMode
 				
 				break;
 			}
-			case 2:
+			case 2: // Gold is Right
 			{
 				telemetry.addData("Status", "Normal");
 				telemetry.addData("Case", "Right");

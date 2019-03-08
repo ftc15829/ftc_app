@@ -32,9 +32,10 @@ public class MainGamepad extends LinearOpMode
 	private DcMotor intakeArm;
 	private DcMotor dunkArm;
 	private DcMotor dunkSlide;
-	private CRServo intake;
+	private DcMotor intake;
 	private CRServo linearServo;
 	private CRServo grabExtend;
+	
 	// Sets the power of the various motors
 	private double drivePower(int id)
 	{
@@ -47,7 +48,7 @@ public class MainGamepad extends LinearOpMode
 			driveMod = 0.5;
 		if (this.gamepad1.right_bumper)
 			driveMod = 0.75;
-		 
+		
 		// Takes the motor ID and sets the power
 		switch (id)
 		{
@@ -68,9 +69,6 @@ public class MainGamepad extends LinearOpMode
 			
 			case 3: // intakeArm
 				power = -this.gamepad2.right_stick_y * 0.6;
-				if (intakeArm.getCurrentPosition() > -100 && power > 0)
-					power = 0;
-				
 				break;
 			
 			case 4: // dunkArm
@@ -84,7 +82,12 @@ public class MainGamepad extends LinearOpMode
 				else if (this.gamepad2.right_bumper/* && dunkSlide.getCurrentPosition() < 0*/)
 					power = 1;
 				break;
-			
+			case 6: // intake
+				if (this.gamepad1.left_trigger != 0)
+					power = this.gamepad1.left_trigger;
+				else if (this.gamepad1.right_trigger != 0)
+					power = -this.gamepad1.right_trigger;
+				break;
 		}
 		return power;
 	}
@@ -123,18 +126,17 @@ public class MainGamepad extends LinearOpMode
 					power = -1.0;
 				break;
 			case 1: // intake
-				
-				if (this.gamepad1.left_trigger != 0)
-					power = -this.gamepad1.left_trigger;
-				else if (this.gamepad1.right_trigger != 0)
-					power = this.gamepad1.right_trigger;
+//				if (this.gamepad1.left_trigger != 0)
+//					power = -this.gamepad1.left_trigger;
+//				else if (this.gamepad1.right_trigger != 0)
+//					power = this.gamepad1.right_trigger;
 				break;
 			case 2:
 				
 				if (this.gamepad1.dpad_up)
 					power = -1;
 				else if (this.gamepad1.dpad_down)
-					power=1;
+					power = 1;
 				break;
 		}
 		return power;
@@ -155,13 +157,14 @@ public class MainGamepad extends LinearOpMode
 		intakeArm = hardwareMap.dcMotor.get("intakeArm");
 		dunkArm = hardwareMap.dcMotor.get("dunkArm");
 		dunkSlide = hardwareMap.dcMotor.get("dunkSlide");
+		intake = hardwareMap.dcMotor.get("intake");
 		linearServo = hardwareMap.crservo.get("linearServo");
-		intake = hardwareMap.crservo.get("intake");
 		grabExtend = hardwareMap.crservo.get("grabExtend");
 		leftDrive.setDirection(DcMotor.Direction.REVERSE);
 		rightDrive.setDirection(DcMotor.Direction.FORWARD);
 		leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+		intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		dunkArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -180,16 +183,18 @@ public class MainGamepad extends LinearOpMode
 			intakeArm.setPower(drivePower(3));
 			dunkArm.setPower(drivePower(4));
 			dunkSlide.setPower(drivePower(5));
+			intake.setPower(drivePower(6));
 			
 			// Controls continuous servos
 			linearServo.setPower(conServo(0));
-			intake.setPower(conServo(1));
 			grabExtend.setPower(conServo(2));
+			
 			// Controls servos
 			
 			
 			// Reset Encoders
-			if (this.gamepad1.x) {
+			if (this.gamepad1.x)
+			{
 				linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 				intakeArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 				dunkArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

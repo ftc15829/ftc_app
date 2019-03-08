@@ -84,8 +84,6 @@ public class PitToMarkerToPit extends LinearOpMode
 		telemetry.addData("Sub-Status", "");
 		telemetry.update();
 		
-		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		
 		// Intake Arm Down
 		telemetry.addData("Status", "Dropping Marker");
 		telemetry.addData("Sub-Status", "Lowering Arm");
@@ -109,6 +107,9 @@ public class PitToMarkerToPit extends LinearOpMode
 		while (intakeArm.isBusy())
 		{ /*wait*/ }
 		intakeArm.setPower(0);
+		
+		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		
 		telemetry.addData("Status", "Normal");
 		telemetry.addData("Sub-Status", "");
 		telemetry.update();
@@ -119,9 +120,6 @@ public class PitToMarkerToPit extends LinearOpMode
 		telemetry.addData("Status", "Lowering");
 		telemetry.addData("Sub-Status", "");
 		telemetry.update();
-		
-		leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		
 		// Linear Slide Up
 		telemetry.addData("Status", "Lowering");
@@ -165,9 +163,10 @@ public class PitToMarkerToPit extends LinearOpMode
 		linearSlide.setPower(0);
 		stopDriving();
 		
-		leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-		rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-		linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+		leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		
 		telemetry.addData("Status", "Normal");
 		telemetry.addData("Sub-Status", "");
 		telemetry.update();
@@ -176,7 +175,7 @@ public class PitToMarkerToPit extends LinearOpMode
 	private void alignGold()
 	{
 		telemetry.addData("Status", "Aligning");
-		telemetry.addData("Sub-Status", "");
+		telemetry.addData("Sub-Status", "Finding Gold");
 		telemetry.update();
 		
 		if (detector.isFound())
@@ -186,14 +185,14 @@ public class PitToMarkerToPit extends LinearOpMode
 		
 		if (!detector.isFound())
 		{
-			turn(-0.3, 0.4);
+			turn(-0.4, 0.4);
 			if (detector.isFound())
 				caseNum = 0;
 		}
 		
 		if (!detector.isFound())
 		{
-			turn(0.7, 0.4);
+			turn(0.8, 0.4);
 			caseNum = 2;
 		}
 		
@@ -215,6 +214,7 @@ public class PitToMarkerToPit extends LinearOpMode
 		
 		leftDrive.setPower(0);
 		rightDrive.setPower(0);
+		
 		telemetry.addData("Status", "Normal");
 		telemetry.addData("Sub-Status", "");
 		telemetry.update();
