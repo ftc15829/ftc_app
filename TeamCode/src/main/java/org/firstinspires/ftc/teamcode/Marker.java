@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -15,7 +15,7 @@ import static android.os.SystemClock.sleep;
 //@Disabled
 @Autonomous(name = "Marker")
 
-public class Marker extends OpMode {
+public class Marker extends LinearOpMode {
 	
 	// Defines hardware
 	private DcMotor leftDrive;
@@ -94,7 +94,7 @@ public class Marker extends OpMode {
 		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
 		intakeArm.setPower(0.5);
-		while (intakeArm.isBusy()) { /*wait*/ }
+		while (intakeArm.isBusy()) { /*wait*/ if (intakeArm.getCurrentPosition() < -600) { intakeArm.setPower(0.2); } }
 		intakeArm.setPower(0);
 		
 		// Intake Arm Up
@@ -103,8 +103,8 @@ public class Marker extends OpMode {
 		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		intakeArm.setTargetPosition(-60);
 		
-		intakeArm.setPower(-0.5);
-		while (intakeArm.isBusy()) { /*wait*/ }
+		intakeArm.setPower(-0.2);
+		while (intakeArm.isBusy()) { /*wait*/ if (intakeArm.getCurrentPosition() > -800) { intakeArm.setPower(0.5); } }
 		intakeArm.setPower(0);
 		
 		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -120,7 +120,7 @@ public class Marker extends OpMode {
 		// Linear Slide Up
 		SubStatus.setValue("Lowering Robot");
 		telemetry.update();
-		linearSlide.setTargetPosition(10300);
+		linearSlide.setTargetPosition(9600);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
 		linearSlide.setPower(0.5);
@@ -174,7 +174,7 @@ public class Marker extends OpMode {
 		}
 		
 		if (!detector.isFound()) {
-			turn(1, 0.4);
+			turn(1.2, 0.4);
 			caseNum = 2;
 		}
 		
@@ -199,8 +199,52 @@ public class Marker extends OpMode {
 		telemetry.update();
 	}
 	
+	private void run() {
+		Status.setValue("Running");
+		Case = telemetry.addData("Case", "");
+		telemetry.update();
+		
+		lower();
+		alignGold();
+		switch (caseNum) {
+			case 0: {
+				Case.setValue("Left");
+				telemetry.update();
+				
+				driveDistance(2.6);
+				turn(1.5, 0.5);
+				driveDistance(1.6);
+				turn(-0.5);
+				dropMarker();
+				driveDistance(-2.0);
+				break;
+			}
+			case 1: {
+				Case.setValue("Middle");
+				telemetry.update();
+				
+				driveDistance(3.0);
+				dropMarker();
+				driveDistance(-2.0);
+				break;
+			}
+			case 2: {
+				Case.setValue("Right");
+				telemetry.update();
+				
+				driveDistance(2.6);
+				turn(-1.0, 0.5);
+				driveDistance(1.6);
+				dropMarker();
+				driveDistance(-2.0);
+				break;
+			}
+		}
+		end();
+	}
+	
 	@Override
-	public void init() {
+	public void runOpMode() {
 		// Updates telemetry (log) to show it is running
 		telemetry.setAutoClear(false);
 		Status = telemetry.addData("Status", "Initialized");
@@ -234,76 +278,15 @@ public class Marker extends OpMode {
 		
 		linearSlide.setTargetPosition(0);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		linearSlide.setPower(0.5);
+		linearSlide.setPower(1);
 		while (linearSlide.isBusy()) { /*wait*/ }
 		linearSlide.setPower(0);
 		
 		SubStatus.setValue("Waiting...");
 		telemetry.update();
-	}
-	
-	@Override
-	public void init_loop() {
-	
-	}
-	
-	@Override
-	public void start() {
-		Status.setValue("Running");
-		Case = telemetry.addData("Case", "");
-		telemetry.update();
 		
-		lower();
-		alignGold();
-		switch (caseNum) {
-			case 0: {
-				Case.setValue("Left");
-				telemetry.update();
-				
-				driveDistance(3.0, 0.5);
-				turn(1.5, 0.5);
-				driveDistance(1.9, 0.5);
-				dropMarker();
-				driveDistance(-6.5, -0.5);
-				break;
-			}
-			case 1: {
-				Case.setValue("Middle");
-				telemetry.update();
-				
-				driveDistance(3.5, 0.5);
-				dropMarker();
-				turn(-1.7, 0.5);
-				driveDistance(7.0, .75);
-				break;
-			}
-			case 2: {
-				Case.setValue("Right");
-				telemetry.update();
-				
-				driveDistance(2.7, 0.5);
-				turn(-1.2, .25);
-				driveDistance(1.7, .25);
-				dropMarker();
-				driveDistance(-10, .5);
-				break;
-			}
-		}
-		stop();
-	}
-	
-	@Override
-	public void loop() {
-		telemetry.update();
-	}
-	
-	@Override
-	public void stop() {
-		leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		intakeArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		while (leftDrive.isBusy() || rightDrive.isBusy() || linearSlide.isBusy() || intakeArm.isBusy()) { /*wait*/ }
-		detector.disable();
+		waitForStart();
+		
+		run();// Runs main function
 	}
 }

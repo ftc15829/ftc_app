@@ -94,7 +94,7 @@ public class MarkerToPit extends LinearOpMode {
 		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
 		intakeArm.setPower(0.5);
-		while (intakeArm.isBusy()) { /*wait*/ }
+		while (intakeArm.isBusy()) { /*wait*/ if (intakeArm.getCurrentPosition() < -600) { intakeArm.setPower(0.2 ); } }
 		intakeArm.setPower(0);
 		
 		// Intake Arm Up
@@ -103,8 +103,8 @@ public class MarkerToPit extends LinearOpMode {
 		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		intakeArm.setTargetPosition(-60);
 		
-		intakeArm.setPower(-0.5);
-		while (intakeArm.isBusy()) { /*wait*/ }
+		intakeArm.setPower(-0.2);
+		while (intakeArm.isBusy()) { /*wait*/ if (intakeArm.getCurrentPosition() > 800) { intakeArm.setPower(0.5); } }
 		intakeArm.setPower(0);
 		
 		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -174,7 +174,7 @@ public class MarkerToPit extends LinearOpMode {
 		}
 		
 		if (!detector.isFound()) {
-			turn(1, 0.4);
+			turn(1.2, 0.4);
 			caseNum = 2;
 		}
 		
@@ -212,11 +212,11 @@ public class MarkerToPit extends LinearOpMode {
 				Case.setValue("Left");
 				telemetry.update();
 				
-				driveDistance(3.0);
-				turn(1.5);
-				driveDistance(1.9);
+				driveDistance(2.55);
+				turn(1.4);
+				driveDistance(1.6);
 				dropMarker();
-				driveDistance(-6.5);
+				driveDistance(-5.4);
 				break;
 			}
 			case 1: // Gold is Middle
@@ -224,15 +224,13 @@ public class MarkerToPit extends LinearOpMode {
 				Case.setValue("Middle");
 				telemetry.update();
 				
-				driveDistance(3.0);
+				driveDistance(2.9);
 				dropMarker();
-				driveDistance(-0.2);
-				turn(-0.6);
+				driveDistance(-2.0);
+				turn(-1.3);
+				driveDistance(3.5);
+				turn(-0.3);
 				driveDistance(0.5);
-				turn(-0.6);
-				driveDistance(0.7);
-				turn(-1.1);
-				driveDistance(6.0);
 				break;
 			}
 			case 2: // Gold is Right
@@ -240,15 +238,15 @@ public class MarkerToPit extends LinearOpMode {
 				Case.setValue("Right");
 				telemetry.update();
 				
-				driveDistance(2.9);
-				turn(-1.5);
-				driveDistance(1.9);
+				driveDistance(2.5);
+				turn(-0.9);
+				driveDistance(1.5);
 				dropMarker();
-				driveDistance(-0.3);
-				turn(-0.8);
-				driveDistance(2.1);
-				turn(-0.7);
-				driveDistance(10);
+				driveDistance(-0.25);
+				turn(-0.95);
+				driveDistance(2.25);
+				turn(-0.45);
+				driveDistance(3.5);
 				break;
 			}
 		}

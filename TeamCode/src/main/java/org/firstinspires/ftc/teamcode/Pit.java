@@ -94,7 +94,7 @@ public class Pit extends LinearOpMode {
 		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
 		intakeArm.setPower(0.5);
-		while (intakeArm.isBusy()) { /*wait*/ }
+		while (intakeArm.isBusy()) { /*wait*/ if (intakeArm.getCurrentPosition() < -600) { intakeArm.setPower(0.2); } }
 		intakeArm.setPower(0);
 		
 		// Intake Arm Up
@@ -103,8 +103,8 @@ public class Pit extends LinearOpMode {
 		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		intakeArm.setTargetPosition(-60);
 		
-		intakeArm.setPower(-0.5);
-		while (intakeArm.isBusy()) { /*wait*/ }
+		intakeArm.setPower(-0.2);
+		while (intakeArm.isBusy()) { /*wait*/ if (intakeArm.getCurrentPosition() > -800) { intakeArm.setPower(0.5); } }
 		intakeArm.setPower(0);
 		
 		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -120,7 +120,7 @@ public class Pit extends LinearOpMode {
 		// Linear Slide Up
 		SubStatus.setValue("Lowering Robot");
 		telemetry.update();
-		linearSlide.setTargetPosition(10300);
+		linearSlide.setTargetPosition(9600);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
 		linearSlide.setPower(0.5);
@@ -174,7 +174,7 @@ public class Pit extends LinearOpMode {
 		}
 		
 		if (!detector.isFound()) {
-			turn(1, 0.4);
+			turn(1.2, 0.4);
 			caseNum = 2;
 		}
 		
@@ -210,21 +210,21 @@ public class Pit extends LinearOpMode {
 				Case.setValue("Left");
 				telemetry.update();
 				
-				driveDistance(3);
+				driveDistance(1.9);
 				break;
 			}
 			case 1: {
 				Case.setValue("Middle");
 				telemetry.update();
 				
-				driveDistance(2.8);
+				driveDistance(1.3);
 				break;
 			}
 			case 2: {
 				Case.setValue("Right");
 				telemetry.update();
 				
-				driveDistance(3);
+				driveDistance(1.6);
 				break;
 			}
 		}

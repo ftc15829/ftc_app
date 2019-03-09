@@ -95,18 +95,18 @@ public class PitToMarkerToPit extends LinearOpMode {
 		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
 		intakeArm.setPower(0.5);
-		while (intakeArm.isBusy()) { /*wait*/ }
+		while (intakeArm.isBusy()) { /*wait*/ if (intakeArm.getCurrentPosition() < -600) { intakeArm.setPower(0.2); } }
 		intakeArm.setPower(0);
 		
 		// Intake Arm Up
-//		SubStatus.setValue("Raising Arm");
-//		telemetry.update();
-//		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//		intakeArm.setTargetPosition(-60);
-//
-//		intakeArm.setPower(-0.5);
-//		while (intakeArm.isBusy()) { /*wait*/ }
-//		intakeArm.setPower(0);
+		SubStatus.setValue("Raising Arm");
+		telemetry.update();
+		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		intakeArm.setTargetPosition(-60);
+		
+		intakeArm.setPower(-0.2);
+		while (intakeArm.isBusy()) { /*wait*/ if (intakeArm.getCurrentPosition() > -800) { intakeArm.setPower(0.5); } }
+		intakeArm.setPower(0);
 		
 		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		
@@ -175,7 +175,7 @@ public class PitToMarkerToPit extends LinearOpMode {
 		}
 		
 		if (!detector.isFound()) {
-			turn(1.0, 0.4);
+			turn(1.2, 0.4);
 			caseNum = 2;
 		}
 		
