@@ -64,7 +64,7 @@ public class Marker extends LinearOpMode {
 		driveDistance(revolutions, 1);
 	}
 	
-	private void turn(double turnUnit, double power) { // int 1,2,3,1000 double 1,1.5,1.8374687236,
+	private void turn(double turnUnit, double power) {
 		leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		
