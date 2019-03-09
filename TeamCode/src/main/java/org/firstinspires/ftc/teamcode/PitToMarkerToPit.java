@@ -24,12 +24,13 @@ public class PitToMarkerToPit extends LinearOpMode {
 	private GoldAlignDetector detector;
 	private int caseNum;
 	
-	private Telemetry.Item Status = telemetry.addData("Status", "Initialized");
-	private Telemetry.Item SubStatus = telemetry.addData("Sub-Status", "");
-	private Telemetry.Item Case = telemetry.addData("Case", "");
+	private Telemetry.Item Status;
+	private Telemetry.Item SubStatus;
+	private Telemetry.Item Case;
 	
 	private void end() {
 		detector.disable();
+		stopDriving();
 		stop();
 	}
 	
@@ -58,6 +59,7 @@ public class PitToMarkerToPit extends LinearOpMode {
 		leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 	}
+	
 	private void driveDistance(double revolutions) {
 		driveDistance(revolutions, 1);
 	}
@@ -78,6 +80,7 @@ public class PitToMarkerToPit extends LinearOpMode {
 		leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 	}
+	
 	private void turn(double turnUnit) {
 		turn(turnUnit, 1);
 	}
@@ -96,14 +99,14 @@ public class PitToMarkerToPit extends LinearOpMode {
 		intakeArm.setPower(0);
 		
 		// Intake Arm Up
-		SubStatus.setValue("Raising Arm");
-		telemetry.update();
-		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		intakeArm.setTargetPosition(-60);
-		
-		intakeArm.setPower(-0.5);
-		while (intakeArm.isBusy()) { /*wait*/ }
-		intakeArm.setPower(0);
+//		SubStatus.setValue("Raising Arm");
+//		telemetry.update();
+//		intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//		intakeArm.setTargetPosition(-60);
+//
+//		intakeArm.setPower(-0.5);
+//		while (intakeArm.isBusy()) { /*wait*/ }
+//		intakeArm.setPower(0);
 		
 		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		
@@ -133,21 +136,19 @@ public class PitToMarkerToPit extends LinearOpMode {
 		linearServo.setPower(0);
 		
 		// Linear Slide Down
-		SubStatus.setValue("Lowering Linear Slide");
-		telemetry.update();
-		linearSlide.setTargetPosition(0);
-		leftDrive.setTargetPosition(1440);
-		rightDrive.setTargetPosition(1440);
-		leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		
-		linearSlide.setPower(1);
-		leftDrive.setPower(0.3);
-		rightDrive.setPower(0.3);
-		while (linearSlide.isBusy()) { /*wait*/ }
-		linearSlide.setPower(0);
-		stopDriving();
+//		SubStatus.setValue("Lowering Linear Slide");
+//		telemetry.update();
+//		linearSlide.setTargetPosition(0);
+//		leftDrive.setTargetPosition(1440);
+//		rightDrive.setTargetPosition(1440);
+//		leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//		rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//		linearSlide.setPower(1);
+//		while (linearSlide.isBusy()) { /*wait*/ }
+//		linearSlide.setPower(0);
+//		stopDriving();
 		
 		leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -174,7 +175,7 @@ public class PitToMarkerToPit extends LinearOpMode {
 		}
 		
 		if (!detector.isFound()) {
-			turn(1, 0.4);
+			turn(1.0, 0.4);
 			caseNum = 2;
 		}
 		
@@ -201,6 +202,7 @@ public class PitToMarkerToPit extends LinearOpMode {
 	
 	private void run() {
 		Status.setValue("Running");
+		Case = telemetry.addData("Case", "");
 		telemetry.update();
 		
 		lower();
@@ -209,40 +211,40 @@ public class PitToMarkerToPit extends LinearOpMode {
 			case 0: {
 				Case.setValue("Left");
 				telemetry.update();
-
-				driveDistance(1.6);
-				driveDistance(-0.5);
+				
+				driveDistance(1.5);
+				driveDistance(-0.4);
 				turn(-0.8);
-				driveDistance(3.3);
-				turn(-0.5);
+				driveDistance(3.4);
+				turn(-0.45);
 				driveDistance(2.0);
 				dropMarker();
-				driveDistance(-5.3);
+				driveDistance(-5.1);
 				break;
 			}
 			case 1: {
 				Case.setValue("Middle");
 				telemetry.update();
-
+				
 				driveDistance(1.1);
 				driveDistance(-0.5);
 				turn(-1.35);
-				driveDistance(4.5);
+				driveDistance(4.4);
 				turn(-0.55);
 				driveDistance(1.4);
 				dropMarker();
-				driveDistance(-5.3);
+				driveDistance(-5.2);
 				break;
 			}
 			case 2: {
 				Case.setValue("Right");
 				telemetry.update();
-
+				
 				driveDistance(1.6);
 				driveDistance(-0.8);
-				turn(-1.7);
-				driveDistance(4.3);
-				turn(-0.55);
+				turn(-1.9);
+				driveDistance(4.5);
+				turn(-0.45);
 				driveDistance(2.0);
 				dropMarker();
 				driveDistance(-5.0);
@@ -257,6 +259,7 @@ public class PitToMarkerToPit extends LinearOpMode {
 		// Updates telemetry (log) to show it is running
 		telemetry.setAutoClear(false);
 		Status = telemetry.addData("Status", "Initialized");
+		SubStatus = telemetry.addData("SubStatus", "");
 		telemetry.update();
 		
 		// Initializes hardware
@@ -286,7 +289,7 @@ public class PitToMarkerToPit extends LinearOpMode {
 		
 		linearSlide.setTargetPosition(0);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		linearSlide.setPower(0.5);
+		linearSlide.setPower(1);
 		while (linearSlide.isBusy()) { /*wait*/ }
 		linearSlide.setPower(0);
 		

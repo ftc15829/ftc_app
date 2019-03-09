@@ -13,8 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 //@Disabled
 @Autonomous(name = "MarkerToPit")
 
-public class MarkerToPit extends LinearOpMode
-{
+public class MarkerToPit extends LinearOpMode {
 	
 	// Defines hardware
 	private DcMotor leftDrive;
@@ -59,6 +58,7 @@ public class MarkerToPit extends LinearOpMode
 		leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 	}
+	
 	private void driveDistance(double revolutions) {
 		driveDistance(revolutions, 1);
 	}
@@ -79,25 +79,10 @@ public class MarkerToPit extends LinearOpMode
 		leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 	}
+	
 	private void turn(double turnUnit) {
 		turn(turnUnit, 1);
 	}
-	
-//	private void custom(double revolutions, double leftPower, double rightPower) {
-//
-//		if (leftPower > rightPower)
-//		{
-//			rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//			leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//			leftDrive.setTargetPosition((int) (revolutions * 1440));
-//		} else {
-//			leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//			rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//			rightDrive.setTargetPosition((int) (revolutions * 1440));
-//		}
-//
-//
-//	}
 	
 	private void dropMarker() {
 		Status.setValue("Dropping Marker");
@@ -135,7 +120,7 @@ public class MarkerToPit extends LinearOpMode
 		// Linear Slide Up
 		SubStatus.setValue("Lowering Robot");
 		telemetry.update();
-		linearSlide.setTargetPosition(10300);
+		linearSlide.setTargetPosition(9600);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
 		linearSlide.setPower(0.5);
@@ -150,21 +135,19 @@ public class MarkerToPit extends LinearOpMode
 		linearServo.setPower(0);
 		
 		// Linear Slide Down
-		SubStatus.setValue("Lowering Linear Slide");
-		telemetry.update();
-		linearSlide.setTargetPosition(0);
-		leftDrive.setTargetPosition(1440);
-		rightDrive.setTargetPosition(1440);
-		leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		
-		linearSlide.setPower(1);
-		leftDrive.setPower(0.3);
-		rightDrive.setPower(0.3);
-		while (linearSlide.isBusy()) { /*wait*/ }
-		linearSlide.setPower(0);
-		stopDriving();
+//		SubStatus.setValue("Lowering Linear Slide");
+//		telemetry.update();
+//		linearSlide.setTargetPosition(0);
+//		leftDrive.setTargetPosition(1440);
+//		rightDrive.setTargetPosition(1440);
+//		leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//		rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//		linearSlide.setPower(1);
+//		while (linearSlide.isBusy()) { /*wait*/ }
+//		linearSlide.setPower(0);
+//		stopDriving();
 		
 		leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -216,16 +199,14 @@ public class MarkerToPit extends LinearOpMode
 		telemetry.update();
 	}
 	
-	private void run()
-	{
+	private void run() {
 		Status.setValue("Running");
 		Case = telemetry.addData("Case", "");
 		telemetry.update();
 		
 		lower();
 		alignGold();
-		switch (caseNum)
-		{
+		switch (caseNum) {
 			case 0: // Gold is Left
 			{
 				Case.setValue("Left");
@@ -275,8 +256,7 @@ public class MarkerToPit extends LinearOpMode
 	}
 	
 	@Override
-	public void runOpMode()
-	{
+	public void runOpMode() {
 		// Updates telemetry (log) to show it is running
 		telemetry.setAutoClear(false);
 		Status = telemetry.addData("Status", "Initialized");
@@ -307,13 +287,12 @@ public class MarkerToPit extends LinearOpMode
 		detector.ratioScorer.weight = 5;
 		detector.ratioScorer.perfectRatio = 1.0; // Ratio adjustment
 		detector.enable(); // Start the detector!
-		
-//		linearSlide.setTargetPosition(0);
-//		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//		linearSlide.setPower(0.5);
-//		while (linearSlide.isBusy())
-//		{ /*wait*/ }
-//		linearSlide.setPower(0);
+
+		linearSlide.setTargetPosition(0);
+		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		linearSlide.setPower(1);
+		while (linearSlide.isBusy()) { /*wait*/ }
+		linearSlide.setPower(0);
 		
 		SubStatus.setValue("Waiting...");
 		telemetry.update();

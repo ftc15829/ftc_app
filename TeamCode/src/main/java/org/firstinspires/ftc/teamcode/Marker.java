@@ -64,7 +64,7 @@ public class Marker extends OpMode {
 		driveDistance(revolutions, 1);
 	}
 	
-	private void turn(double turnUnit, double power) {
+	private void turn(double turnUnit, double power) { // int 1,2,3,1000 double 1,1.5,1.8374687236,
 		leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		
@@ -135,21 +135,19 @@ public class Marker extends OpMode {
 		linearServo.setPower(0);
 		
 		// Linear Slide Down
-		SubStatus.setValue("Lowering Linear Slide");
-		telemetry.update();
-		linearSlide.setTargetPosition(0);
-		leftDrive.setTargetPosition(1440);
-		rightDrive.setTargetPosition(1440);
-		leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		
-		linearSlide.setPower(1);
-		leftDrive.setPower(0.3);
-		rightDrive.setPower(0.3);
-		while (linearSlide.isBusy()) { /*wait*/ }
-		linearSlide.setPower(0);
-		stopDriving();
+//		SubStatus.setValue("Lowering Linear Slide");
+//		telemetry.update();
+//		linearSlide.setTargetPosition(0);
+//		leftDrive.setTargetPosition(1440);
+//		rightDrive.setTargetPosition(1440);
+//		leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//		rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//		linearSlide.setPower(1);
+//		while (linearSlide.isBusy()) { /*wait*/ }
+//		linearSlide.setPower(0);
+//		stopDriving();
 		
 		leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -296,14 +294,16 @@ public class Marker extends OpMode {
 	
 	@Override
 	public void loop() {
-//		telemetry.addData("IsAligned", detector.getAligned());
-//		telemetry.addData("X Pos", detector.getXPosition());
-//		telemetry.update();
+		telemetry.update();
 	}
 	
 	@Override
 	public void stop() {
-		if (detector != null)
-			detector.disable();
+		leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		intakeArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		while (leftDrive.isBusy() || rightDrive.isBusy() || linearSlide.isBusy() || intakeArm.isBusy()) { /*wait*/ }
+		detector.disable();
 	}
 }

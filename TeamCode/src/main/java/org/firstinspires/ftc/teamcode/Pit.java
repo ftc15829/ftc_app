@@ -58,6 +58,7 @@ public class Pit extends LinearOpMode {
 		leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 	}
+	
 	private void driveDistance(double revolutions) {
 		driveDistance(revolutions, 1);
 	}
@@ -78,6 +79,7 @@ public class Pit extends LinearOpMode {
 		leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 	}
+	
 	private void turn(double turnUnit) {
 		turn(turnUnit, 1);
 	}
@@ -133,21 +135,19 @@ public class Pit extends LinearOpMode {
 		linearServo.setPower(0);
 		
 		// Linear Slide Down
-		SubStatus.setValue("Lowering Linear Slide");
-		telemetry.update();
-		linearSlide.setTargetPosition(0);
-		leftDrive.setTargetPosition(1440);
-		rightDrive.setTargetPosition(1440);
-		leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		
-		linearSlide.setPower(1);
-		leftDrive.setPower(0.3);
-		rightDrive.setPower(0.3);
-		while (linearSlide.isBusy()) { /*wait*/ }
-		linearSlide.setPower(0);
-		stopDriving();
+//		SubStatus.setValue("Lowering Linear Slide");
+//		telemetry.update();
+//		linearSlide.setTargetPosition(0);
+//		leftDrive.setTargetPosition(1440);
+//		rightDrive.setTargetPosition(1440);
+//		leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//		rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//		linearSlide.setPower(1);
+//		while (linearSlide.isBusy()) { /*wait*/ }
+//		linearSlide.setPower(0);
+//		stopDriving();
 		
 		leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -210,21 +210,21 @@ public class Pit extends LinearOpMode {
 				Case.setValue("Left");
 				telemetry.update();
 				
-				driveDistance(3, 1);
+				driveDistance(3);
 				break;
 			}
 			case 1: {
 				Case.setValue("Middle");
 				telemetry.update();
 				
-				driveDistance(2.8, 1);
+				driveDistance(2.8);
 				break;
 			}
 			case 2: {
 				Case.setValue("Right");
 				telemetry.update();
 				
-				driveDistance(3, 0.5);
+				driveDistance(3);
 				break;
 			}
 		}
@@ -264,7 +264,7 @@ public class Pit extends LinearOpMode {
 		
 		linearSlide.setTargetPosition(0);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		linearSlide.setPower(0.5);
+		linearSlide.setPower(1);
 		while (linearSlide.isBusy()) { /*wait*/ }
 		linearSlide.setPower(0);
 		
