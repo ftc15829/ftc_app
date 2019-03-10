@@ -120,7 +120,7 @@ public class Marker extends LinearOpMode {
 		// Linear Slide Up
 		SubStatus.setValue("Lowering Robot");
 		telemetry.update();
-		linearSlide.setTargetPosition(9600);
+		linearSlide.setTargetPosition(10300);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
 		linearSlide.setPower(0.5);

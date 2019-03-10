@@ -121,7 +121,7 @@ public class PitToMarkerToPit extends LinearOpMode {
 		// Linear Slide Up
 		SubStatus.setValue("Lowering Robot");
 		telemetry.update();
-		linearSlide.setTargetPosition(9600);
+		linearSlide.setTargetPosition(10300);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
 		linearSlide.setPower(0.5);
@@ -207,6 +207,7 @@ public class PitToMarkerToPit extends LinearOpMode {
 		
 		lower();
 		alignGold();
+		
 		switch (caseNum) {
 			case 0: {
 				Case.setValue("Left");
@@ -215,11 +216,11 @@ public class PitToMarkerToPit extends LinearOpMode {
 				driveDistance(1.5);
 				driveDistance(-0.4);
 				turn(-0.8);
-				driveDistance(3.4);
-				turn(-0.45);
-				driveDistance(2.0);
+				driveDistance(2);
+				turn(-0.8);
+				driveDistance(3.8);
 				dropMarker();
-				driveDistance(-5.1);
+				driveDistance(-6);
 				break;
 			}
 			case 1: {
@@ -227,13 +228,13 @@ public class PitToMarkerToPit extends LinearOpMode {
 				telemetry.update();
 				
 				driveDistance(1.1);
-				driveDistance(-0.5);
-				turn(-1.35);
-				driveDistance(4.4);
-				turn(-0.55);
-				driveDistance(1.4);
+				driveDistance(-1.3);
+				turn(-1);
+				driveDistance(3.2);
+				turn(-1.1);
+				driveDistance(3.7);
 				dropMarker();
-				driveDistance(-5.2);
+				driveDistance(-6);
 				break;
 			}
 			case 2: {
@@ -241,11 +242,11 @@ public class PitToMarkerToPit extends LinearOpMode {
 				telemetry.update();
 				
 				driveDistance(1.6);
-				driveDistance(-0.8);
+				driveDistance(-1.1);
 				turn(-1.9);
-				driveDistance(4.5);
-				turn(-0.45);
-				driveDistance(2.0);
+				driveDistance(3.5);
+				turn(-0.7);
+				driveDistance(2.3);
 				dropMarker();
 				driveDistance(-5.0);
 				break;

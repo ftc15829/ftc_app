@@ -104,7 +104,7 @@ public class MarkerToPit extends LinearOpMode {
 		intakeArm.setTargetPosition(-60);
 		
 		intakeArm.setPower(-0.2);
-		while (intakeArm.isBusy()) { /*wait*/ if (intakeArm.getCurrentPosition() > 800) { intakeArm.setPower(0.5); } }
+		while (intakeArm.isBusy()) { /*wait*/ if (intakeArm.getCurrentPosition() > 400) { intakeArm.setPower(1); } }
 		intakeArm.setPower(0);
 		
 		intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -120,7 +120,7 @@ public class MarkerToPit extends LinearOpMode {
 		// Linear Slide Up
 		SubStatus.setValue("Lowering Robot");
 		telemetry.update();
-		linearSlide.setTargetPosition(9600);
+		linearSlide.setTargetPosition(10300);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		
 		linearSlide.setPower(0.5);
@@ -213,10 +213,12 @@ public class MarkerToPit extends LinearOpMode {
 				telemetry.update();
 				
 				driveDistance(2.55);
-				turn(1.4);
+				turn(1.2, 0.5);
 				driveDistance(1.6);
+//				turn(-0.4);
 				dropMarker();
-				driveDistance(-5.4);
+				turn(0.4);
+				driveDistance(-6);
 				break;
 			}
 			case 1: // Gold is Middle
@@ -226,11 +228,11 @@ public class MarkerToPit extends LinearOpMode {
 				
 				driveDistance(2.9);
 				dropMarker();
-				driveDistance(-2.0);
-				turn(-1.3);
+				driveDistance(-2.5);
+				turn(-1.4);
 				driveDistance(3.5);
-				turn(-0.3);
-				driveDistance(0.5);
+				turn(-0.7);
+				driveDistance(0.9);
 				break;
 			}
 			case 2: // Gold is Right
@@ -239,14 +241,14 @@ public class MarkerToPit extends LinearOpMode {
 				telemetry.update();
 				
 				driveDistance(2.5);
-				turn(-0.9);
-				driveDistance(1.5);
+				turn(-1.2);
+				driveDistance(1.2);
 				dropMarker();
 				driveDistance(-0.25);
-				turn(-0.95);
-				driveDistance(2.25);
-				turn(-0.45);
-				driveDistance(3.5);
+				turn(-0.9);
+				driveDistance(2.2);
+				turn(-0.55);
+				driveDistance(3.8);
 				break;
 			}
 		}
